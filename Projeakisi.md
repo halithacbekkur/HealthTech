@@ -12,13 +12,13 @@ Bu dosya, "HealthTech" takımının haftalık proje ilerlemesini ve üyelerin ka
 
 **Nedim İsa:**
 
--
+
 
 **Ömer Doğan:**
--
+
 
 **Zelal Ergin:**
--
+
 
 **Ahmet Akif Yılmaz:**
--
+
