@@ -11,7 +11,6 @@ Bu dosya, "HealthTech" takımının haftalık proje ilerlemesini ve üyelerin ka
 - Takım üyelerine Git ve GitHub iş akışı hakkında kısa bilgilendirme yapıldı.
 
 **Nedim İsa:**
-Ruhfhdhfhd
 
 
 **Ömer Doğan:**
