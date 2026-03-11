@@ -12,7 +12,7 @@ Bu dosya, "HealthTech" takımının haftalık proje ilerlemesini ve üyelerin ka
 
 **Nedim İsa:**
 -
-
+. 
 **Ömer Doğan:**
 -
 
