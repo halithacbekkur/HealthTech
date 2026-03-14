@@ -59,6 +59,12 @@ Sağlık verileri (**KVKK / GDPR uyumu**) en yüksek önceliğe sahiptir.
 
 **Zelal Ergin:**
 
+* Gerekli yazılım geliştirme araçlarının (IntelliJ IDEA, JDK 25) kurulumu ve yapılandırması tamamlandı.
+* Proje için Git sürüm kontrol sistemi kuruldu ve GitHub hesabı ile entegrasyon sağlandı.
+* Uzak depo (repository) yerel bilgisayara klonlanarak çalışma ortamı hazırlandı.
+* Proje mimarisine uygun olarak temel `backend` ve `frontend` klasör yapısı oluşturuldu.
+* İlk hafta ödevi kapsamında geliştirme ortamı ayarları yapılarak ana depoya (main branch) başarılı bir şekilde gönderildi (push edildi).
+
 
 **Ahmet Akif Yılmaz:**
 
