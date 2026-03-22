@@ -2,7 +2,7 @@
 
 Bu dosya, "HealthTech" takımının haftalık proje ilerlemesini ve üyelerin katkılarını takip etmek için oluşturulmuştur.
 
-## 1. Hafta (Örn: 9–15 Mart)
+## 1. Hafta (9–15 Mart)
 
 **Halid Hacbekkur (Scrum Master / Yönetici):**
 - GitHub repository oluşturuldu.
