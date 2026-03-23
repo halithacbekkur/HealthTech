@@ -1,157 +1,90 @@
-# 🏥 HealthTech – Proje Akışı & Haftalık İlerleme
+# 🏥 HealthTech – Proje Akışı ve Haftalık İlerleme
 
-Bu doküman, **HealthTech Tele‑Sağlık Platformu** projesinin haftalık ilerlemesini, takım üyelerinin görevlerini ve teknik gereksinimleri profesyonel ve takip edilebilir bir şekilde kayıt altına almak amacıyla hazırlanmıştır.
+Bu doküman, **HealthTech takımının** haftalık proje ilerlemesini ve ekip üyelerinin katkılarını takip etmek amacıyla hazırlanmıştır.
 
 ---
 
 ## 📅 1. Hafta (9–15 Mart)
 
-### 👨‍💼 Halid Hacbekkur — *Scrum Master & Proje Yöneticisi*
+### 👤 Halid Hacbekkur *(Scrum Master / Yönetici)*
 
-* Proje için GitHub repository oluşturuldu.
-* `main` branch için temel yapılandırmalar gerçekleştirildi.
-* Proje iş akışını takip etmek amacıyla **projeakisi.md** dokümanı oluşturuldu.
-* Takım üyelerine **Git & GitHub iş akışı** hakkında temel bilgilendirme yapıldı.
-
----
-
-### 📝 Nedim İsa — *Gereksinim Toplama & Belgeleme*
-
-⚠️ Bu hafta görev henüz tamamlanmamıştır.
+- GitHub repository oluşturuldu.  
+- `main` branch için temel yapılandırmalar gerçekleştirildi.  
+- Proje sürecini takip etmek amacıyla **projeakisi.md** dosyası oluşturuldu.  
+- Takım üyelerine Git ve GitHub iş akışı hakkında kısa bilgilendirme yapıldı.  
 
 ---
 
-### 🔐 Güvenlik Gereksinimleri (Security)
+### 👤 Nedim İsa
 
-Sağlık verileri kapsamında **KVKK ve GDPR uyumluluğu** sistemin en kritik önceliğidir.
-
-* **Veri Gizliliği:**
-  Tüm veri transferleri **TLS 1.3** protokolü ile uçtan uca şifrelenmelidir.
-
-* **Kimlik Doğrulama:**
-  Sistem girişlerinde **JWT (JSON Web Token)** kullanılmalı ve mümkün olan durumlarda **İki Faktörlü Kimlik Doğrulama (2FA)** desteklenmelidir.
-
-* **Yetkilendirme:**
-  **Role-Based Access Control (RBAC)** modeli uygulanarak doktor, hasta ve admin rollerinin erişim yetkileri net biçimde ayrılmalıdır.
+*(Bu hafta kapsamında görev teslimi bulunmamaktadır.)*
 
 ---
 
-### ⚡ Performans & Ölçeklenebilirlik (Performance & Scalability)
+### 👤 Ömer Doğan  
 
-* **Yanıt Süresi:**
-  Randevu listeleme ve tıbbi kayıt sorgulama işlemleri **2 saniyenin altında** sonuçlanmalıdır.
+## 1️⃣ Güvenlik (Security)
 
-* **Eşzamanlı Kullanım:**
-  Video görüşme modülünde sistem en az **100 eşzamanlı aktif oturumu** kesinti yaşamadan destekleyebilmelidir.
+Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olarak belirlenmiştir.
 
-* **Veritabanı Optimizasyonu:**
-  **MySQL** üzerinde sık kullanılan sorgular için doğru **indexleme stratejileri** uygulanmalıdır.
+- **Veri Gizliliği:**  
+  Tüm verilerin aktarım sırasında **TLS 1.3** protokolü ile şifrelenmesi planlanmaktadır.
 
----
+- **Kimlik Doğrulama:**  
+  Sistem girişlerinde **JWT (JSON Web Token)** kullanılması ve mümkünse **İki Faktörlü Doğrulama (2FA)** desteği sağlanması hedeflenmektedir.
 
-### 🎨 Kullanılabilirlik & Mobil Uyumluluk (Usability)
-
-* **Responsive Tasarım:**
-  **Angular** ile geliştirilecek arayüz tüm cihazlarda (**masaüstü / tablet / mobil**) %100 uyumlu çalışmalıdır.
-
-* **Erişilebilirlik:**
-  Renk kontrastı ve font boyutları **WCAG standartlarına** uygun seçilerek yaşlı veya görme zorluğu yaşayan kullanıcılar için erişilebilirlik sağlanmalıdır.
+- **Yetkilendirme:**  
+  **Role Based Access Control (RBAC)** yaklaşımı ile doktor, hasta ve admin erişim alanlarının net şekilde ayrılması öngörülmektedir.
 
 ---
 
-### 🟢 Güvenilirlik & Süreklilik (Reliability & Availability)
+## 2️⃣ Performans ve Ölçeklenebilirlik (Performance & Scalability)
 
-* **Uptime Hedefi:**
-  Sistem **7/24 erişilebilir** olmalı ve yıllık **%99.9 uptime** hedefi karşılanmalıdır.
+- **Yanıt Süresi:**  
+  Online randevu listeleme veya tıbbi kayıt sorgulama işlemlerinin **2 saniyenin altında** sonuçlanması hedeflenmektedir.
 
-* **Hata Yönetimi:**
-  **Spring Boot Global Exception Handling** mekanizması kurularak kullanıcıya teknik hata mesajları yerine **anlaşılır geri bildirimler** sunulmalıdır.
+- **Eşzamanlılık:**  
+  Video konferans sırasında sistemin aynı anda **en az 100 aktif oturumu** sorunsuz desteklemesi planlanmaktadır.
 
----
-
-### ⚙️ Zelal Ergin — *Geliştirme Ortamı Kurulumu*
-
-* IntelliJ IDEA ve **JDK 25** kurulumu tamamlandı.
-* Git sürüm kontrol sistemi yapılandırıldı ve GitHub entegrasyonu sağlandı.
-* Uzak depo yerel ortama klonlandı.
-* Proje mimarisine uygun **backend / frontend klasör yapısı** oluşturuldu.
-* İlk hafta ödevi kapsamında yapılan ayarlar başarıyla `main` branch’e gönderildi.
+- **Veritabanı Optimizasyonu:**  
+  **MySQL** üzerinde sık kullanılan sorgular için uygun **indeksleme** stratejilerinin uygulanması düşünülmektedir.
 
 ---
 
-### 🧠 Ahmet Akif Yılmaz — *Veri Modeli Tasarımı*
+## 3️⃣ Kullanılabilirlik ve Mobil Uyumluluk (Usability)
 
-#### 📊 Tele-Sağlık Platformu Veritabanı Modeli
+- **Responsive Tasarım:**  
+  **Angular** ile geliştirilecek arayüzün masaüstü, tablet ve mobil cihazlarla **%100 uyumlu** olması hedeflenmektedir.
 
-##### 🔹 Users Tablosu
-
-| Alan       | Tip          | Açıklama           |
-| ---------- | ------------ | ------------------ |
-| id         | BIGINT       | Primary Key        |
-| full_name  | VARCHAR(100) | Kullanıcı adı      |
-| email      | VARCHAR(100) | E-posta            |
-| password   | VARCHAR(255) | Şifre              |
-| phone      | VARCHAR(20)  | Telefon            |
-| role       | ENUM         | Kullanıcı rolü     |
-| created_at | DATETIME     | Oluşturulma tarihi |
-
-##### 🔹 Patients Tablosu
-
-| Alan       | Tip          |
-| ---------- | ------------ |
-| id         | BIGINT       |
-| user_id    | BIGINT       |
-| birth_date | DATE         |
-| gender     | VARCHAR(10)  |
-| address    | VARCHAR(255) |
-| blood_type | VARCHAR(5)   |
-
-##### 🔹 Doctors Tablosu
-
-| Alan             | Tip         |
-| ---------------- | ----------- |
-| id               | BIGINT      |
-| user_id          | BIGINT      |
-| specialty_id     | BIGINT      |
-| license_number   | VARCHAR(50) |
-| experience_years | INT         |
-
-##### 🔹 Appointments Tablosu
-
-| Alan             | Tip      |
-| ---------------- | -------- |
-| id               | BIGINT   |
-| patient_id       | BIGINT   |
-| doctor_id        | BIGINT   |
-| appointment_date | DATETIME |
-| status           | ENUM     |
-| notes            | TEXT     |
+- **Erişilebilirlik:**  
+  Renk paleti ve yazı boyutlarının, yaşlı veya görme zorluğu yaşayan kullanıcılar için uygun (**WCAG standartlarında**) olması planlanmaktadır.
 
 ---
 
-### 🔗 Tablolar Arası İlişkiler
+## 4️⃣ Güvenilirlik ve Erişilebilirlik (Reliability & Availability)
 
-* Users → Patients (**1-1**)
-* Users → Doctors (**1-1**)
-* Patients → Appointments (**1-N**)
-* Doctors → Appointments (**1-N**)
-* Patients → Medical Records (**1-N**)
-* Doctors → Medical Records (**1-N**)
-* Medical Records → Prescriptions (**1-N**)
+- **Çalışma Süresi (Uptime):**  
+  Sistemin **7/24 erişilebilir** olması ve yıllık **%99.9 erişilebilirlik** oranına sahip olması hedeflenmektedir.
+
+- **Hata Yönetimi:**  
+  **Spring Boot** tarafında merkezi bir hata yakalama mekanizması (**Global Exception Handling**) kurulması ve kullanıcıya teknik hata yerine anlamlı geri bildirim verilmesi planlanmaktadır.
 
 ---
 
-### 🗺️ ER Diyagramı
+### 👤 Zelal Ergin
 
-![ER Diagram](er_diagram.jpg)
-
-Bu diyagram, sistemdeki kullanıcı rollerini, randevu ilişkilerini ve tıbbi kayıt akışını görselleştirerek **ölçeklenebilir ve sürdürülebilir bir veritabanı mimarisi** hedeflendiğini göstermektedir.
+- Gerekli yazılım geliştirme araçlarının (**IntelliJ IDEA, JDK 25**) kurulumu ve yapılandırması tamamlandı.  
+- Proje için Git sürüm kontrol sistemi kuruldu ve GitHub hesabı ile entegrasyon sağlandı.  
+- Uzak depo (**repository**) yerel bilgisayara klonlanarak çalışma ortamı hazırlandı.  
+- Proje mimarisine uygun olarak temel `backend` ve `frontend` klasör yapısı oluşturuldu.  
+- İlk hafta ödevi kapsamında geliştirme ortamı ayarları yapılarak ana depoya (**main branch**) başarıyla gönderildi (*push edildi*).  
 
 ---
 
-## ✅ Genel Değerlendirme (Hafta 1)
+### 👤 Ahmet Akif Yılmaz  
 
-* Takımdaki **5 üyenin görev dağılımı korunmuştur.**
-* Nedim İsa dışındaki tüm üyeler haftalık görevlerini tamamlamıştır.
-* Proje altyapısı başarıyla oluşturulmuştur.
-* Sonraki sprintte gereksinim analizi ve backend geliştirme sürecine başlanacaktır.
+## Tele-Sağlık Platformu Veri Modeli
+
+### 1️⃣ Giriş  
+
+Bu doküman, tele-sağlık platformu için tasarlanan veritabanı modelini açıklamaktadır. Sistem; hasta, doktor ve yönetici kullanıcılarını, randevu işlemlerini ve tıbbi kayıtları yönetmek amacıyla tasarlanmıştır.
