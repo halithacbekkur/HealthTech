@@ -65,6 +65,10 @@ Sağlık verileri (**KVKK / GDPR uyumu**) en yüksek önceliğe sahiptir.
 * Proje mimarisine uygun olarak temel `backend` ve `frontend` klasör yapısı oluşturuldu.
 * İlk hafta ödevi kapsamında geliştirme ortamı ayarları yapılarak ana depoya (main branch) başarılı bir şekilde gönderildi (push edildi).
 
+
+
+**Ahmet Akif Yılmaz:**
+
 ## Tele-Sağlık Platformu Veri Modeli
 
 1. Giriş
@@ -166,8 +170,4 @@ Bu veri modeli, tele-sağlık platformundaki kullanıcı, hasta, doktor ve rande
 
 Bu ER diyagramı, tele-sağlık platformunun veritabanı yapısını göstermektedir. Sistem içerisinde kullanıcılar hasta veya doktor rolünde olabilir. Hastalar ve doktorlar arasında randevu ilişkileri kurulmaktadır. Randevular sonucunda tıbbi kayıtlar oluşturulabilir ve bu kayıtlar üzerinden reçeteler tanımlanabilir. Bu yapı sistemin düzenli ve genişletilebilir bir veritabanı mimarisi ile çalışmasını sağlamaktadır.
 
-
-
-
-**Ahmet Akif Yılmaz:**
 
