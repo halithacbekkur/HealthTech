@@ -23,7 +23,7 @@ Bu doküman, **HealthTech takımının** haftalık proje ilerlemesini ve ekip ü
 
 ### 👤 Ömer Doğan  
 
-## 1️⃣ Güvenlik (Security)
+## 1. Güvenlik (Security)
 
 Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olarak belirlenmiştir.
 
@@ -38,7 +38,7 @@ Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olar
 
 ---
 
-## 2️⃣ Performans ve Ölçeklenebilirlik (Performance & Scalability)
+## 2. Performans ve Ölçeklenebilirlik (Performance & Scalability)
 
 - **Yanıt Süresi:**  
   Online randevu listeleme veya tıbbi kayıt sorgulama işlemlerinin **2 saniyenin altında** sonuçlanması hedeflenmektedir.
@@ -51,7 +51,7 @@ Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olar
 
 ---
 
-## 3️⃣ Kullanılabilirlik ve Mobil Uyumluluk (Usability)
+## 3. Kullanılabilirlik ve Mobil Uyumluluk (Usability)
 
 - **Responsive Tasarım:**  
   **Angular** ile geliştirilecek arayüzün masaüstü, tablet ve mobil cihazlarla **%100 uyumlu** olması hedeflenmektedir.
@@ -61,7 +61,7 @@ Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olar
 
 ---
 
-## 4️⃣ Güvenilirlik ve Erişilebilirlik (Reliability & Availability)
+## 4. Güvenilirlik ve Erişilebilirlik (Reliability & Availability)
 
 - **Çalışma Süresi (Uptime):**  
   Sistemin **7/24 erişilebilir** olması ve yıllık **%99.9 erişilebilirlik** oranına sahip olması hedeflenmektedir.
@@ -85,6 +85,76 @@ Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olar
 
 ## Tele-Sağlık Platformu Veri Modeli
 
-### 1️⃣ Giriş  
+### 1. Giriş
 
 Bu doküman, tele-sağlık platformu için tasarlanan veritabanı modelini açıklamaktadır. Sistem; hasta, doktor ve yönetici kullanıcılarını, randevu işlemlerini ve tıbbi kayıtları yönetmek amacıyla tasarlanmıştır.
+
+---
+
+### 2. Veritabanı Tabloları
+
+#### Users
+
+| Alan | Veri Tipi | Açıklama |
+|------|-----------|----------|
+| id | BIGINT | Primary Key |
+| full_name | VARCHAR(100) | Kullanıcı adı |
+| email | VARCHAR(100) | E-posta |
+| password | VARCHAR(255) | Şifre |
+| phone | VARCHAR(20) | Telefon |
+| role | ENUM | Kullanıcı rolü |
+| created_at | DATETIME | Oluşturulma tarihi |
+
+#### Patients
+
+| Alan | Veri Tipi |
+|------|-----------|
+| id | BIGINT |
+| user_id | BIGINT |
+| birth_date | DATE |
+| gender | VARCHAR(10) |
+| address | VARCHAR(255) |
+| blood_type | VARCHAR(5) |
+
+#### Doctors
+
+| Alan | Veri Tipi |
+|------|-----------|
+| id | BIGINT |
+| user_id | BIGINT |
+| specialty_id | BIGINT |
+| license_number | VARCHAR(50) |
+| experience_years | INT |
+
+#### Appointments
+
+| Alan | Veri Tipi |
+|------|-----------|
+| id | BIGINT |
+| patient_id | BIGINT |
+| doctor_id | BIGINT |
+| appointment_date | DATETIME |
+| status | ENUM |
+| notes | TEXT |
+
+---
+
+### 3. Tablolar Arasındaki İlişkiler
+
+- Users → Patients (1-1)  
+- Users → Doctors (1-1)  
+- Patients → Appointments (1-N)  
+- Doctors → Appointments (1-N)  
+- Patients → Medical Records (1-N)  
+- Doctors → Medical Records (1-N)  
+- Medical Records → Prescriptions (1-N)
+
+---
+
+### ER Diyagram Açıklaması
+
+Bu veri modeli, tele-sağlık platformundaki kullanıcı, hasta, doktor ve randevu ilişkilerini göstermektedir. Sistem içerisinde kullanıcılar farklı roller üstlenebilir ve hastalar ile doktorlar arasında randevu ilişkileri kurulabilir. Bu yapı sistemin düzenli ve genişletilebilir bir veritabanı mimarisi ile çalışmasını sağlamaktadır.
+
+## ER Diagram
+
+![ER Diyagramı](er_diagram.jpg)
