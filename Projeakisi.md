@@ -162,7 +162,7 @@ Bu veri modeli, tele-sağlık platformundaki kullanıcı, hasta, doktor ve rande
 
 ## ER Diagram
 
-![ER Diyagramı](er_diyagram.jpg)
+![ER Diyagramı](er_diagram.jpg)
 
 Bu ER diyagramı, tele-sağlık platformunun veritabanı yapısını göstermektedir. Sistem içerisinde kullanıcılar hasta veya doktor rolünde olabilir. Hastalar ve doktorlar arasında randevu ilişkileri kurulmaktadır. Randevular sonucunda tıbbi kayıtlar oluşturulabilir ve bu kayıtlar üzerinden reçeteler tanımlanabilir. Bu yapı sistemin düzenli ve genişletilebilir bir veritabanı mimarisi ile çalışmasını sağlamaktadır.
 
