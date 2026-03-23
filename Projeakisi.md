@@ -65,7 +65,7 @@ Sağlık verileri (**KVKK / GDPR uyumu**) en yüksek önceliğe sahiptir.
 * Proje mimarisine uygun olarak temel `backend` ve `frontend` klasör yapısı oluşturuldu.
 * İlk hafta ödevi kapsamında geliştirme ortamı ayarları yapılarak ana depoya (main branch) başarılı bir şekilde gönderildi (push edildi).
 
-Tele-Sağlık Platformu Veri Modeli
+## Tele-Sağlık Platformu Veri Modeli
 
 1. Giriş
 Bu doküman, tele-sağlık platformu için tasarlanan veritabanı modelini açıklamaktadır. Sistem; hasta, doktor ve yönetici kullanıcılarını, randevu işlemlerini ve tıbbi kayıtları yönetmek amacıyla tasarlanmıştır.
