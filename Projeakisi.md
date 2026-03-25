@@ -17,7 +17,74 @@ Bu doküman, **HealthTech takımının** haftalık proje ilerlemesini ve ekip ü
 
 ### 👤 Nedim İsa
 
-*(Bu hafta kapsamında görev teslimi bulunmamaktadır.)*
+### 👤 Nedim İsa *(Gereksinim Toplama ve Belgeleme)*
+
+Tele-Sağlık Platformu projesi kapsamında sistemin fonksiyonel ve teknik gereksinimlerini belirlemek amacıyla kapsamlı bir analiz süreci yürütülmüştür. Bu süreçte platformun kullanıcı rolleri, sistem beklentileri ve kullanım senaryoları detaylı şekilde incelenmiş ve dokümante edilmiştir.
+
+---
+
+## 📌 Fonksiyonel Gereksinimler
+
+### 👤 Hasta Tarafı
+
+- Hasta kullanıcıların sisteme kayıt olabilmesi ve giriş yapabilmesi  
+- Kişisel bilgilerini ve sağlık profilini görüntüleyebilmesi ve güncelleyebilmesi  
+- Doktorların uzmanlık alanına göre filtrelenerek listelenmesi  
+- Uygun tarih ve saat seçerek online randevu oluşturabilmesi  
+- Mevcut randevularını görüntüleyebilmesi, iptal edebilmesi veya yeniden planlayabilmesi  
+- Randevu saatinde sistem üzerinden video görüşme başlatabilmesi  
+- Kendi tıbbi kayıtlarına erişebilmesi ve geçmiş verilerini görüntüleyebilmesi  
+
+---
+
+### 👨‍⚕️ Doktor Tarafı
+
+- Doktor kullanıcıların sisteme giriş yapabilmesi ve profilini yönetebilmesi  
+- Randevu taleplerini görüntüleyebilmesi ve onaylayabilmesi  
+- Planlanan randevular için video görüşme oturumu başlatabilmesi  
+- Hastaya ait tıbbi bilgileri görüntüleyebilmesi ve yeni kayıt ekleyebilmesi  
+- Çalışma saatlerini ve uygunluk durumunu sistem üzerinden ayarlayabilmesi  
+
+---
+
+### 🛠️ Yönetici (Admin) Tarafı
+
+- Sistem kullanıcılarını (hasta ve doktor) yönetebilmesi  
+- Doktor doğrulama ve rol atama işlemlerini gerçekleştirebilmesi  
+- Sistem genelinde randevu ve kayıt verilerini izleyebilmesi  
+- Sistem güvenliği ve veri bütünlüğünü sağlamak için gerekli kontrol mekanizmalarını yönetebilmesi  
+
+---
+
+## ⚙️ Teknik Gereksinimler
+
+- Backend geliştirme sürecinde Java ve Spring Boot framework kullanılması  
+- Frontend tarafında Angular tabanlı responsive arayüz geliştirilmesi  
+- Verilerin güvenli şekilde saklanması için MySQL veritabanı kullanılması  
+- Sistem erişimlerinde JWT tabanlı kimlik doğrulama mekanizması uygulanması  
+- Tüm veri transferlerinin TLS/HTTPS protokolü üzerinden gerçekleştirilmesi  
+- Video görüşme altyapısı için WebRTC veya benzeri gerçek zamanlı iletişim teknolojilerinin kullanılması  
+
+---
+
+## 📖 Kullanıcı Hikayeleri (User Stories)
+
+- “Bir hasta olarak uygun bir doktordan online randevu almak istiyorum, böylece sağlık hizmetine hızlı şekilde erişebilirim.”  
+- “Bir doktor olarak randevu taleplerini sistem üzerinden yönetmek istiyorum, böylece çalışma planımı düzenleyebilirim.”  
+- “Bir kullanıcı olarak video görüşme yaparak uzaktan sağlık danışmanlığı almak istiyorum.”  
+- “Bir yönetici olarak sistemdeki kullanıcıları kontrol etmek istiyorum, böylece platform güvenli ve düzenli çalışabilir.”  
+
+---
+
+## 🎯 Kullanım Senaryosu (Use Case Örneği)
+
+1. Hasta sisteme giriş yapar  
+2. Uzmanlık alanına göre doktor araması yapar  
+3. Uygun randevu saatini seçer  
+4. Randevu oluşturulur  
+5. Randevu saatinde video görüşme başlatılır  
+6. Doktor görüşme sonrası tıbbi kayıt ekler  
+7. Hasta kayıtlarını panelden görüntüler  
 
 ---
 
