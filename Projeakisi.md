@@ -184,4 +184,4 @@ Tele-Sağlık platformu için kullanıcı, hasta, doktor ve randevu yönetimini 
 
 ## 🧩 ER Diagram
 
-![ER Diyagramı](er_diagram.jpg)
+![ER Diyagramı](er_diagram.png)
