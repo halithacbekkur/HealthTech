@@ -1,200 +1,169 @@
 # 🏥 HealthTech – Proje Akışı ve Haftalık İlerleme
 
-Bu doküman, **HealthTech takımının** haftalık proje ilerlemesini ve ekip üyelerinin katkılarını takip etmek amacıyla hazırlanmıştır.
+Bu doküman, **HealthTech (Tele-Sağlık Platformu)** projesinin haftalık ilerleme durumunu ve ekip üyelerinin projeye olan katkılarını takip etmek amacıyla hazırlanmıştır.
+
+Proje; sağlık hizmetlerine erişimi kolaylaştırmak, hasta ve doktor arasındaki iletişimi dijital ortama taşımak ve uzaktan sağlık hizmetlerini daha verimli hale getirmek amacıyla geliştirilmektedir.
 
 ---
 
 ## 📅 1. Hafta (9–15 Mart)
 
-### 👤 Halid Hacbekkur *(Scrum Master / Yönetici)*
+---
 
-- GitHub repository oluşturuldu.  
-- `main` branch için temel yapılandırmalar gerçekleştirildi.  
-- Proje sürecini takip etmek amacıyla **projeakisi.md** dosyası oluşturuldu.  
-- Takım üyelerine Git ve GitHub iş akışı hakkında kısa bilgilendirme yapıldı.  
+## 👤 Halid Hacbekkur *(Scrum Master / Proje Yönetimi)*
+
+- Proje için GitHub repository oluşturuldu ve ekip erişimleri sağlandı.  
+- `main` branch temel yapılandırmaları ve proje başlangıç ayarları gerçekleştirildi.  
+- Proje sürecinin düzenli şekilde takip edilmesi amacıyla **projeakisi.md** dokümanı oluşturuldu.  
+- Takım üyelerine Git ve GitHub iş akışı hakkında temel bilgilendirme yapıldı.  
+- Sprint planlaması ve görev dağılımı organize edildi.
 
 ---
 
-### 👤 Nedim İsa
+## 👤 Nedim İsa *(Gereksinim Toplama ve Belgeleme)*
 
-Tele-Sağlık Platformu projesi kapsamında sistemin fonksiyonel ve teknik gereksinimlerini belirlemek amacıyla kapsamlı bir analiz süreci yürütülmüştür. Bu süreçte platformun kullanıcı rolleri, sistem beklentileri ve kullanım senaryoları detaylı şekilde incelenmiş ve dokümante edilmiştir.
+Tele-Sağlık Platformu için sistemin fonksiyonel ve teknik gereksinimlerini belirlemek amacıyla analiz süreci yürütülmüş ve temel kullanım senaryoları dokümante edilmiştir.
 
----
+### 📌 Fonksiyonel Gereksinimler
 
-## 📌 Fonksiyonel Gereksinimler
+#### Hasta Tarafı
 
-###  Hasta Tarafı
+- Sisteme kayıt olabilme ve güvenli giriş yapabilme  
+- Profil ve sağlık bilgilerinin görüntülenmesi ve güncellenmesi  
+- Uzmanlık alanına göre doktor arama ve listeleme  
+- Online randevu oluşturma, görüntüleme, iptal etme ve yeniden planlama  
+- Randevu saatinde video görüşme başlatabilme  
+- Tıbbi kayıt geçmişini görüntüleyebilme  
 
-- Hasta kullanıcıların sisteme kayıt olabilmesi ve giriş yapabilmesi  
-- Kişisel bilgilerini ve sağlık profilini görüntüleyebilmesi ve güncelleyebilmesi  
-- Doktorların uzmanlık alanına göre filtrelenerek listelenmesi  
-- Uygun tarih ve saat seçerek online randevu oluşturabilmesi  
-- Mevcut randevularını görüntüleyebilmesi, iptal edebilmesi veya yeniden planlayabilmesi  
-- Randevu saatinde sistem üzerinden video görüşme başlatabilmesi  
-- Kendi tıbbi kayıtlarına erişebilmesi ve geçmiş verilerini görüntüleyebilmesi  
+#### Doktor Tarafı
 
----
+- Sisteme giriş yapabilme ve profil yönetimi  
+- Randevu taleplerini görüntüleme ve onaylama  
+- Video görüşme oturumu başlatabilme  
+- Hastaya ait tıbbi kayıtları görüntüleme ve yeni kayıt oluşturma  
+- Çalışma saatleri ve uygunluk takvimi yönetimi  
 
-### 👨‍⚕️ Doktor Tarafı
+#### Yönetici (Admin) Tarafı
 
-- Doktor kullanıcıların sisteme giriş yapabilmesi ve profilini yönetebilmesi  
-- Randevu taleplerini görüntüleyebilmesi ve onaylayabilmesi  
-- Planlanan randevular için video görüşme oturumu başlatabilmesi  
-- Hastaya ait tıbbi bilgileri görüntüleyebilmesi ve yeni kayıt ekleyebilmesi  
-- Çalışma saatlerini ve uygunluk durumunu sistem üzerinden ayarlayabilmesi  
-
----
-
-### 🛠️ Yönetici (Admin) Tarafı
-
-- Sistem kullanıcılarını (hasta ve doktor) yönetebilmesi  
-- Doktor doğrulama ve rol atama işlemlerini gerçekleştirebilmesi  
-- Sistem genelinde randevu ve kayıt verilerini izleyebilmesi  
-- Sistem güvenliği ve veri bütünlüğünü sağlamak için gerekli kontrol mekanizmalarını yönetebilmesi  
+- Kullanıcı yönetimi (hasta ve doktor)  
+- Rol atama ve doktor doğrulama işlemleri  
+- Sistem genelinde randevu ve kayıt verilerini izleme  
+- Sistem güvenliği ve veri bütünlüğü kontrolleri  
 
 ---
 
-## ⚙️ Teknik Gereksinimler
+### ⚙️ Teknik Gereksinimler
 
-- Backend geliştirme sürecinde Java ve Spring Boot framework kullanılması  
-- Frontend tarafında Angular tabanlı responsive arayüz geliştirilmesi  
-- Verilerin güvenli şekilde saklanması için MySQL veritabanı kullanılması  
-- Sistem erişimlerinde JWT tabanlı kimlik doğrulama mekanizması uygulanması  
-- Tüm veri transferlerinin TLS/HTTPS protokolü üzerinden gerçekleştirilmesi  
-- Video görüşme altyapısı için WebRTC veya benzeri gerçek zamanlı iletişim teknolojilerinin kullanılması  
-
----
-
-## 📖 Kullanıcı Hikayeleri (User Stories)
-
-- “Bir hasta olarak uygun bir doktordan online randevu almak istiyorum, böylece sağlık hizmetine hızlı şekilde erişebilirim.”  
-- “Bir doktor olarak randevu taleplerini sistem üzerinden yönetmek istiyorum, böylece çalışma planımı düzenleyebilirim.”  
-- “Bir kullanıcı olarak video görüşme yaparak uzaktan sağlık danışmanlığı almak istiyorum.”  
-- “Bir yönetici olarak sistemdeki kullanıcıları kontrol etmek istiyorum, böylece platform güvenli ve düzenli çalışabilir.”  
+- Backend geliştirme için **Java & Spring Boot** kullanımı  
+- Frontend geliştirme için **Angular tabanlı responsive arayüz**  
+- Veri yönetimi için **MySQL veritabanı**  
+- Kimlik doğrulama için **JWT Authentication**  
+- Güvenli veri transferi için **TLS / HTTPS protokolü**  
+- Gerçek zamanlı görüşmeler için **WebRTC altyapısı**  
 
 ---
 
-## 🎯 Kullanım Senaryosu (Use Case Örneği)
+### 📖 Kullanıcı Hikayeleri
+
+- *Bir hasta olarak hızlı şekilde uygun doktordan randevu almak istiyorum.*  
+- *Bir doktor olarak randevu taleplerimi sistem üzerinden yönetmek istiyorum.*  
+- *Bir kullanıcı olarak uzaktan video görüşme ile sağlık danışmanlığı almak istiyorum.*  
+- *Bir yönetici olarak platformun güvenli ve düzenli çalışmasını sağlamak istiyorum.*
+
+---
+
+### 🎯 Örnek Kullanım Senaryosu
 
 1. Hasta sisteme giriş yapar  
-2. Uzmanlık alanına göre doktor araması yapar  
+2. Doktor araması gerçekleştirir  
 3. Uygun randevu saatini seçer  
 4. Randevu oluşturulur  
-5. Randevu saatinde video görüşme başlatılır  
-6. Doktor görüşme sonrası tıbbi kayıt ekler  
-7. Hasta kayıtlarını panelden görüntüler  
+5. Görüşme saatinde video oturumu başlatılır  
+6. Doktor tıbbi kayıt ekler  
+7. Hasta kayıtları panelden görüntüler  
 
 ---
 
-### 👤 Ömer Doğan  
+## 👤 Ömer Doğan *(Sistem Kalitesi ve Teknoloji Analizi)*
 
-## 1. Güvenlik (Security)
+### 🔐 Güvenlik
 
-Sağlık verilerinin korunması (**KVKK / GDPR uyumu**) en yüksek öncelik olarak belirlenmiştir.
+- Sağlık verilerinin korunması için **KVKK / GDPR uyum hedefi** belirlenmiştir.  
+- Veri transferinde **TLS 1.3 şifreleme protokolü** planlanmıştır.  
+- Sistem girişlerinde **JWT ve isteğe bağlı 2FA doğrulama** öngörülmüştür.  
+- **RBAC yetkilendirme modeli** ile kullanıcı erişimleri ayrıştırılacaktır.
 
-- **Veri Gizliliği:**  
-  Tüm verilerin aktarım sırasında **TLS 1.3** protokolü ile şifrelenmesi planlanmaktadır.
+### 🚀 Performans ve Ölçeklenebilirlik
 
-- **Kimlik Doğrulama:**  
-  Sistem girişlerinde **JWT (JSON Web Token)** kullanılması ve mümkünse **İki Faktörlü Doğrulama (2FA)** desteği sağlanması hedeflenmektedir.
+- Kritik işlemlerin **2 saniyenin altında yanıt süresi** hedeflenmiştir.  
+- Video konferans sırasında **en az 100 eşzamanlı oturum** desteği planlanmıştır.  
+- MySQL üzerinde **indeksleme ve sorgu optimizasyonu** çalışmaları öngörülmüştür.
 
-- **Yetkilendirme:**  
-  **Role Based Access Control (RBAC)** yaklaşımı ile doktor, hasta ve admin erişim alanlarının net şekilde ayrılması öngörülmektedir.
+### 📱 Kullanılabilirlik
 
----
+- Angular arayüzünün tüm cihazlarda **responsive çalışması** hedeflenmiştir.  
+- **WCAG standartlarına uygun erişilebilirlik** planlanmıştır.
 
-## 2. Performans ve Ölçeklenebilirlik (Performance & Scalability)
+### ☁️ Güvenilirlik
 
-- **Yanıt Süresi:**  
-  Online randevu listeleme veya tıbbi kayıt sorgulama işlemlerinin **2 saniyenin altında** sonuçlanması hedeflenmektedir.
-
-- **Eşzamanlılık:**  
-  Video konferans sırasında sistemin aynı anda **en az 100 aktif oturumu** sorunsuz desteklemesi planlanmaktadır.
-
-- **Veritabanı Optimizasyonu:**  
-  **MySQL** üzerinde sık kullanılan sorgular için uygun **indeksleme** stratejilerinin uygulanması düşünülmektedir.
+- Sistem için **%99.9 uptime** hedefi belirlenmiştir.  
+- Spring Boot tarafında **Global Exception Handling** uygulanacaktır.
 
 ---
 
-## 3. Kullanılabilirlik ve Mobil Uyumluluk (Usability)
+## 👤 Zelal Ergin *(Geliştirme Ortamı Kurulumu)*
 
-- **Responsive Tasarım:**  
-  **Angular** ile geliştirilecek arayüzün masaüstü, tablet ve mobil cihazlarla **%100 uyumlu** olması hedeflenmektedir.
-
-- **Erişilebilirlik:**  
-  Renk paleti ve yazı boyutlarının, yaşlı veya görme zorluğu yaşayan kullanıcılar için uygun (**WCAG standartlarında**) olması planlanmaktadır.
-
----
-
-## 4. Güvenilirlik ve Erişilebilirlik (Reliability & Availability)
-
-- **Çalışma Süresi (Uptime):**  
-  Sistemin **7/24 erişilebilir** olması ve yıllık **%99.9 erişilebilirlik** oranına sahip olması hedeflenmektedir.
-
-- **Hata Yönetimi:**  
-  **Spring Boot** tarafında merkezi bir hata yakalama mekanizması (**Global Exception Handling**) kurulması ve kullanıcıya teknik hata yerine anlamlı geri bildirim verilmesi planlanmaktadır.
+- IntelliJ IDEA ve JDK kurulumu tamamlandı.  
+- Git sürüm kontrol sistemi yapılandırıldı.  
+- Repository klonlanarak yerel çalışma ortamı hazırlandı.  
+- Backend ve frontend klasör mimarisi oluşturuldu.  
+- İlk yapılandırmalar ana branch’e başarıyla gönderildi.
 
 ---
 
-### 👤 Zelal Ergin
+## 👤 Ahmet Akif Yılmaz *(Veri Modeli Tasarımı)*
 
-- Gerekli yazılım geliştirme araçlarının (**IntelliJ IDEA, JDK 25**) kurulumu ve yapılandırması tamamlandı.  
-- Proje için Git sürüm kontrol sistemi kuruldu ve GitHub hesabı ile entegrasyon sağlandı.  
-- Uzak depo (**repository**) yerel bilgisayara klonlanarak çalışma ortamı hazırlandı.  
-- Proje mimarisine uygun olarak temel `backend` ve `frontend` klasör yapısı oluşturuldu.  
-- İlk hafta ödevi kapsamında geliştirme ortamı ayarları yapılarak ana depoya (**main branch**) başarıyla gönderildi (*push edildi*).  
+Tele-Sağlık platformu için kullanıcı, hasta, doktor ve randevu yönetimini kapsayan veritabanı modeli tasarlanmıştır.
 
----
-
-### 👤 Ahmet Akif Yılmaz  
-
-## Tele-Sağlık Platformu Veri Modeli
-
-### 1. Giriş
-
-Bu doküman, tele-sağlık platformu için tasarlanan veritabanı modelini açıklamaktadır. Sistem; hasta, doktor ve yönetici kullanıcılarını, randevu işlemlerini ve tıbbi kayıtları yönetmek amacıyla tasarlanmıştır.
-
----
-
-### 2. Veritabanı Tabloları
+### 📊 Tablolar
 
 #### Users
 
-| Alan | Veri Tipi | Açıklama |
-|------|-----------|----------|
-| id | BIGINT | Primary Key |
-| full_name | VARCHAR(100) | Kullanıcı adı |
-| email | VARCHAR(100) | E-posta |
-| password | VARCHAR(255) | Şifre |
-| phone | VARCHAR(20) | Telefon |
-| role | ENUM | Kullanıcı rolü |
-| created_at | DATETIME | Oluşturulma tarihi |
+| Alan | Tip |
+|------|-----|
+| id | BIGINT |
+| full_name | VARCHAR |
+| email | VARCHAR |
+| password | VARCHAR |
+| phone | VARCHAR |
+| role | ENUM |
+| created_at | DATETIME |
 
 #### Patients
 
-| Alan | Veri Tipi |
-|------|-----------|
+| Alan | Tip |
+|------|-----|
 | id | BIGINT |
 | user_id | BIGINT |
 | birth_date | DATE |
-| gender | VARCHAR(10) |
-| address | VARCHAR(255) |
-| blood_type | VARCHAR(5) |
+| gender | VARCHAR |
+| address | VARCHAR |
+| blood_type | VARCHAR |
 
 #### Doctors
 
-| Alan | Veri Tipi |
-|------|-----------|
+| Alan | Tip |
+|------|-----|
 | id | BIGINT |
 | user_id | BIGINT |
 | specialty_id | BIGINT |
-| license_number | VARCHAR(50) |
+| license_number | VARCHAR |
 | experience_years | INT |
 
 #### Appointments
 
-| Alan | Veri Tipi |
-|------|-----------|
+| Alan | Tip |
+|------|-----|
 | id | BIGINT |
 | patient_id | BIGINT |
 | doctor_id | BIGINT |
@@ -204,22 +173,15 @@ Bu doküman, tele-sağlık platformu için tasarlanan veritabanı modelini açı
 
 ---
 
-### 3. Tablolar Arasındaki İlişkiler
+### 🔗 İlişkiler
 
 - Users → Patients (1-1)  
 - Users → Doctors (1-1)  
 - Patients → Appointments (1-N)  
 - Doctors → Appointments (1-N)  
-- Patients → Medical Records (1-N)  
-- Doctors → Medical Records (1-N)  
-- Medical Records → Prescriptions (1-N)
 
 ---
 
-### ER Diyagram Açıklaması
-
-Bu veri modeli, tele-sağlık platformundaki kullanıcı, hasta, doktor ve randevu ilişkilerini göstermektedir. Sistem içerisinde kullanıcılar farklı roller üstlenebilir ve hastalar ile doktorlar arasında randevu ilişkileri kurulabilir. Bu yapı sistemin düzenli ve genişletilebilir bir veritabanı mimarisi ile çalışmasını sağlamaktadır.
-
-## ER Diagram
+## 🧩 ER Diagram
 
 ![ER Diyagramı](er_diagram.jpg)
