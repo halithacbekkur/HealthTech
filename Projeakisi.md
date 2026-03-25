@@ -17,15 +17,13 @@ Bu doküman, **HealthTech takımının** haftalık proje ilerlemesini ve ekip ü
 
 ### 👤 Nedim İsa
 
-### 👤 Nedim İsa *(Gereksinim Toplama ve Belgeleme)*
-
 Tele-Sağlık Platformu projesi kapsamında sistemin fonksiyonel ve teknik gereksinimlerini belirlemek amacıyla kapsamlı bir analiz süreci yürütülmüştür. Bu süreçte platformun kullanıcı rolleri, sistem beklentileri ve kullanım senaryoları detaylı şekilde incelenmiş ve dokümante edilmiştir.
 
 ---
 
 ## 📌 Fonksiyonel Gereksinimler
 
-### 👤 Hasta Tarafı
+###  Hasta Tarafı
 
 - Hasta kullanıcıların sisteme kayıt olabilmesi ve giriş yapabilmesi  
 - Kişisel bilgilerini ve sağlık profilini görüntüleyebilmesi ve güncelleyebilmesi  
