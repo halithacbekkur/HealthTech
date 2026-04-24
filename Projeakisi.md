@@ -8,6 +8,9 @@ Proje; sağlık hizmetlerine erişimi kolaylaştırmak, hasta ve doktor arasınd
 
 ## 📅 1. Hafta (9–15 Mart)
 
+### 🎯 Sprint Goal
+Bu sprintin amacı, projenin temel altyapısını kurmak, ekip görevlerini netleştirmek ve sistemin genel işleyişini tanımlamaktır.
+
 ---
 
 ## 👤 Halid Hacbekkur *(Scrum Master / Proje Yönetimi)*
