@@ -1,0 +1,26 @@
+<div class="app-layout">
+  <!-- Navbar Gezinme Menüsü -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a routerLink="/home" class="brand-logo">
+          <span class="logo-icon">⚕️</span>
+          <span class="logo-text">HealthTech</span>
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a routerLink="/home" routerLinkActive="active" class="nav-link">Ana Sayfa</a>
+        <a routerLink="/register" routerLinkActive="active" class="nav-link">Yeni Kayıt</a>
+        <a routerLink="/profiles" routerLinkActive="active" class="nav-link">Profiller</a>
+      </div>
+      <div class="navbar-user">
+        <div class="user-avatar">DR</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Ana İçerik -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

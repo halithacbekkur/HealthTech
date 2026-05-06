@@ -1,0 +1,87 @@
+<div class="profiles-container">
+  <div class="header-section">
+    <h1>Hasta Profilleri</h1>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" [(ngModel)]="searchTerm" placeholder="İsim, soyisim veya TC Kimlik No ile ara..." />
+    </div>
+  </div>
+
+  <div *ngIf="patientState.loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Hastalar yükleniyor...</p>
+  </div>
+
+  <div *ngIf="patientState.error()" class="error-state">
+    <p>{{ patientState.error() }}</p>
+    <button (click)="patientState.loadPatients()" class="btn btn-primary">Tekrar Dene</button>
+  </div>
+
+  <!-- Hastalar Listesi Grid -->
+  <div class="patients-grid" *ngIf="!patientState.loading() && !patientState.error() && filteredPatients().length > 0">
+    <div class="patient-card" *ngFor="let patient of filteredPatients()" (click)="viewDetails(patient)">
+      <div class="card-avatar">
+        {{ patient.firstName.charAt(0) }}{{ patient.lastName.charAt(0) }}
+      </div>
+      <div class="card-info">
+        <h3>{{ patient.firstName }} {{ patient.lastName }}</h3>
+        <p class="identity">TC: {{ patient.identityNumber }}</p>
+        <p class="contact">📞 {{ patient.phone }}</p>
+      </div>
+      <div class="card-action">
+        <button class="btn-icon">➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boş Durum -->
+  <div class="empty-state" *ngIf="!patientState.loading() && filteredPatients().length === 0">
+    <div class="empty-icon">📭</div>
+    <h3>Kayıt Bulunamadı</h3>
+    <p>Arama kriterlerinize uyan bir hasta bulunamadı veya henüz hiç hasta kaydedilmemiş.</p>
+  </div>
+
+  <!-- Detay Modal (Seçili Hasta) -->
+  <div class="modal-overlay" *ngIf="selectedPatient" (click)="closeDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeDetails()">✖</button>
+      
+      <div class="modal-header">
+        <div class="modal-avatar">
+          {{ selectedPatient.firstName.charAt(0) }}{{ selectedPatient.lastName.charAt(0) }}
+        </div>
+        <h2>{{ selectedPatient.firstName }} {{ selectedPatient.lastName }}</h2>
+        <span class="badge">{{ selectedPatient.gender === 'Male' ? 'Erkek' : (selectedPatient.gender === 'Female' ? 'Kadın' : 'Diğer') }}</span>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-group">
+          <label>TC Kimlik No</label>
+          <p>{{ selectedPatient.identityNumber }}</p>
+        </div>
+        <div class="info-group">
+          <label>Doğum Tarihi</label>
+          <p>{{ selectedPatient.dateOfBirth }}</p>
+        </div>
+        <div class="info-group">
+          <label>Telefon</label>
+          <p>{{ selectedPatient.phone }}</p>
+        </div>
+        <div class="info-group">
+          <label>E-posta</label>
+          <p>{{ selectedPatient.email || '-' }}</p>
+        </div>
+        
+        <div class="info-group full-width">
+          <label>Adres</label>
+          <p>{{ selectedPatient.address || 'Adres bilgisi girilmemiş.' }}</p>
+        </div>
+
+        <div class="info-group full-width medical-history">
+          <label>Tıbbi Geçmiş / Notlar</label>
+          <p>{{ selectedPatient.medicalHistory || 'Özel bir tıbbi geçmiş/not bulunmuyor.' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

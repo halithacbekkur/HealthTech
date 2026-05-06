@@ -1,0 +1,122 @@
+<div class="registration-container">
+  <div class="registration-card">
+    <div class="card-header">
+      <h2>Yeni Hasta Kaydı</h2>
+      <p>Sisteme yeni bir hasta eklemek için lütfen aşağıdaki formu doldurun.</p>
+    </div>
+
+    <!-- Alert Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <div class="icon">✓</div>
+      {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      <div class="icon">!</div>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" class="registration-form">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Ad</label>
+          <input type="text" id="firstName" formControlName="firstName" 
+                 [class.is-invalid]="patientForm.get('firstName')?.invalid && patientForm.get('firstName')?.touched"
+                 placeholder="Hastanın adı">
+          <div class="error-message" *ngIf="patientForm.get('firstName')?.invalid && patientForm.get('firstName')?.touched">
+            Geçerli bir ad giriniz.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Soyad</label>
+          <input type="text" id="lastName" formControlName="lastName"
+                 [class.is-invalid]="patientForm.get('lastName')?.invalid && patientForm.get('lastName')?.touched"
+                 placeholder="Hastanın soyadı">
+          <div class="error-message" *ngIf="patientForm.get('lastName')?.invalid && patientForm.get('lastName')?.touched">
+            Geçerli bir soyad giriniz.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="identityNumber">TC Kimlik Numarası</label>
+          <input type="text" id="identityNumber" formControlName="identityNumber"
+                 [class.is-invalid]="patientForm.get('identityNumber')?.invalid && patientForm.get('identityNumber')?.touched"
+                 placeholder="11 haneli TC kimlik no">
+          <div class="error-message" *ngIf="patientForm.get('identityNumber')?.invalid && patientForm.get('identityNumber')?.touched">
+            11 haneli geçerli bir TC Kimlik Numarası giriniz.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfBirth">Doğum Tarihi</label>
+          <input type="date" id="dateOfBirth" formControlName="dateOfBirth"
+                 [class.is-invalid]="patientForm.get('dateOfBirth')?.invalid && patientForm.get('dateOfBirth')?.touched">
+          <div class="error-message" *ngIf="patientForm.get('dateOfBirth')?.invalid && patientForm.get('dateOfBirth')?.touched">
+            Doğum tarihi zorunludur.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Cinsiyet</label>
+          <div class="select-wrapper">
+            <select id="gender" formControlName="gender"
+                    [class.is-invalid]="patientForm.get('gender')?.invalid && patientForm.get('gender')?.touched">
+              <option value="" disabled selected>Seçiniz</option>
+              <option value="Male">Erkek</option>
+              <option value="Female">Kadın</option>
+              <option value="Other">Diğer</option>
+            </select>
+          </div>
+          <div class="error-message" *ngIf="patientForm.get('gender')?.invalid && patientForm.get('gender')?.touched">
+            Cinsiyet seçimi zorunludur.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Telefon Numarası</label>
+          <input type="tel" id="phone" formControlName="phone"
+                 [class.is-invalid]="patientForm.get('phone')?.invalid && patientForm.get('phone')?.touched"
+                 placeholder="5551234567">
+          <div class="error-message" *ngIf="patientForm.get('phone')?.invalid && patientForm.get('phone')?.touched">
+            Geçerli bir telefon numarası giriniz.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-posta Adresi (İsteğe Bağlı)</label>
+        <input type="email" id="email" formControlName="email"
+               [class.is-invalid]="patientForm.get('email')?.invalid && patientForm.get('email')?.touched"
+               placeholder="ornek@email.com">
+        <div class="error-message" *ngIf="patientForm.get('email')?.invalid && patientForm.get('email')?.touched">
+          Geçerli bir e-posta adresi giriniz.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Adres (İsteğe Bağlı)</label>
+        <textarea id="address" formControlName="address" rows="3" placeholder="Tam adres..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="medicalHistory">Önemli Tıbbi Geçmiş / Notlar (İsteğe Bağlı)</label>
+        <textarea id="medicalHistory" formControlName="medicalHistory" rows="4" placeholder="Kronik hastalıklar, alerjiler vb."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="patientForm.reset()">Temizle</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span class="spinner" *ngIf="isSubmitting"></span>
+          <span *ngIf="!isSubmitting">Hastayı Kaydet</span>
+          <span *ngIf="isSubmitting">Kaydediliyor...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
