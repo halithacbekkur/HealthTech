@@ -2,15 +2,16 @@ package com.healthtech.telehealth.controller;
 
 import com.healthtech.telehealth.entity.User;
 import com.healthtech.telehealth.repository.UserRepository;
-import org.springframework.web.bind.annotation.*;
+import com.healthtech.telehealth.service.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import jakarta.validation.Valid;import com.healthtech.telehealth.service.JwtService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,21 +27,21 @@ public class AuthController {
     public Map<String, String> login(@RequestBody User request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+                .orElseThrow(() -> new RuntimeException("Kullanici bulunamadi"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Şifre yanlış");
+            throw new RuntimeException("Sifre yanlis");
         }
 
-        String token = jwtService.generateToken(user.getEmail());
+        // Artik token icine rol bilgisi de ekleniyor
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 
         return Map.of("token", token);
     }
+
     @PostMapping("/register")
-    public User register(@Valid @RequestBody User request){
-
+    public User register(@Valid @RequestBody User request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-
         return userRepository.save(request);
     }
 }

@@ -1,14 +1,21 @@
 package com.healthtech.telehealth.security;
 
 import com.healthtech.telehealth.service.JwtService;
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
-public class JwtAuthFilter implements Filter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
@@ -17,26 +24,27 @@ public class JwtAuthFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        jakarta.servlet.http.HttpServletResponse res =
-                (jakarta.servlet.http.HttpServletResponse) response;
+        String path = request.getRequestURI();
 
-        String path = req.getRequestURI();
-
-        if (path.startsWith("/api/auth")) {
-            chain.doFilter(request, response);
+        // Auth ve Swagger endpoint'leri token gerektirmez
+        if (path.startsWith("/api/auth") ||
+            path.startsWith("/swagger-ui") ||
+            path.startsWith("/v3/api-docs")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        String authHeader = req.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            res.setStatus(401);
-            res.setContentType("application/json");
-            res.getWriter().write("{\"message\":\"Token gerekli\"}");
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\":\"Token gerekli\"}");
             return;
         }
 
@@ -44,14 +52,25 @@ public class JwtAuthFilter implements Filter {
 
         try {
             String email = jwtService.extractEmail(token);
-            System.out.println("Token geçerli, kullanıcı: " + email);
+            String role = jwtService.extractRole(token);
+
+            // Spring Security'ye kullanicinin kim oldugunu ve rolunu bildiriyoruz
+            // ROLE_ prefix'i Spring Security'nin kurali — roller "ROLE_PATIENT" seklinde olmali
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
+
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(email, null, List.of(authority));
+
+            // SecurityContextHolder = Spring'in "su an kim giris yapmis" bilgisini tuttugu yer
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
         } catch (Exception e) {
-            res.setStatus(401);
-            res.setContentType("application/json");
-            res.getWriter().write("{\"message\":\"Geçersiz token\"}");
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\":\"Gecersiz token\"}");
             return;
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }
