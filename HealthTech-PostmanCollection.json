@@ -1,0 +1,270 @@
+{
+  "info": {
+    "name": "HealthTech API - Test Collection",
+    "description": "Tele-Sağlık Platformu Backend API Test Koleksiyonu\n\nHazırlayan: Ahmet Akif Yılmaz\nGörev: Hafta 6 - Final Test\nTarih: Mayıs 2026\n\nBu koleksiyon tüm mevcut endpoint'leri pozitif (mutlu yol) ve negatif (hata) senaryolarla test eder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth - Mutlu Yol",
+      "item": [
+        {
+          "name": "✅ Register - Yeni Kullanıcı",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Akif Test\",\n  \"email\": \"akif.test@example.com\",\n  \"password\": \"Sifre123!\",\n  \"phone\": \"05551112233\",\n  \"role\": \"PATIENT\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status code 200 olmalı', () => pm.response.to.have.status(200));",
+                "pm.test('Response içinde id olmalı', () => pm.expect(pm.response.json().id).to.exist);",
+                "pm.test('BUG-004: Password response içinde olmamalı', () => {",
+                "  const body = pm.response.json();",
+                "  pm.expect(body.password, 'Şifre API yanıtında dönmemeli').to.be.undefined;",
+                "});"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "✅ Login - Geçerli Kullanıcı",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"akif.test@example.com\",\n  \"password\": \"Sifre123!\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status code 200 olmalı', () => pm.response.to.have.status(200));",
+                "pm.test('Token dönmeli', () => pm.expect(pm.response.json().token).to.exist);",
+                "if (pm.response.code === 200) { pm.collectionVariables.set('authToken', pm.response.json().token); }"
+              ]
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "2. Auth - Hata Senaryoları",
+      "item": [
+        {
+          "name": "❌ Register - Geçersiz Email (Validation Test)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"gecersiz-email\",\n  \"password\": \"Sifre123!\",\n  \"role\": \"PATIENT\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 400 Bad Request olmalı', () => pm.response.to.have.status(400));",
+                "pm.test('Validation hatası dönmeli', () => pm.expect(pm.response.json().email).to.exist);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "❌ BUG-009: Register - Aynı Email Çift Kayıt",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Akif Test\",\n  \"email\": \"akif.test@example.com\",\n  \"password\": \"Sifre123!\",\n  \"phone\": \"05551112233\",\n  \"role\": \"PATIENT\"\n}"
+            },
+            "description": "BEKLENEN: 409 Conflict\nGERÇEKLEŞEN: 500 Internal Server Error (BUG-009)"
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('BUG-009: 409 Conflict bekleniyor (şu an 500 dönüyor)', () => {",
+                "  pm.expect([409, 400]).to.include(pm.response.code, ",
+                "    'BUG: Duplicate email kontrolü yok, 500 hata dönüyor');",
+                "});"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "❌ BUG-005: Login - Yanlış Şifre",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"akif.test@example.com\",\n  \"password\": \"YanlisSifre\"\n}"
+            },
+            "description": "BEKLENEN: 401 Unauthorized\nGERÇEKLEŞEN: 500 Internal Server Error (BUG-005)"
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('BUG-005: 401 Unauthorized bekleniyor', () => {",
+                "  pm.expect(pm.response.code).to.equal(401, ",
+                "    'BUG: RuntimeException düzgün handle edilmiyor, 500 dönüyor');",
+                "});"
+              ]
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "3. Users - CRUD",
+      "item": [
+        {
+          "name": "🔐 GET All Users (Token Yok - BUG-002 Test)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"]},
+            "description": "BEKLENEN: 401 Unauthorized (token gerekli)\nGERÇEKLEŞEN: 200 OK (BUG-002: Spring Security açık değil)"
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('BUG-002: 401 Unauthorized bekleniyor', () => {",
+                "  pm.expect(pm.response.code).to.equal(401, ",
+                "    'BUG: Token olmadan endpoint erişilebilir!');",
+                "});"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "✅ GET All Users (Token ile)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{authToken}}"}],
+            "url": {"raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"]}
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 olmalı', () => pm.response.to.have.status(200));",
+                "pm.test('Liste dönmeli', () => pm.expect(pm.response.json()).to.be.an('array'));"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "✅ GET User By ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{authToken}}"}],
+            "url": {"raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"]}
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 olmalı', () => pm.response.to.have.status(200));",
+                "pm.test('Email içermeli', () => pm.expect(pm.response.json().email).to.exist);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "❌ GET User By ID - Olmayan ID (404 Test)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{authToken}}"}],
+            "url": {"raw": "{{baseUrl}}/api/users/99999", "host": ["{{baseUrl}}"], "path": ["api", "users", "99999"]}
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('404 Not Found dönmeli', () => pm.response.to.have.status(404));",
+                "pm.test('Hata mesajı dönmeli', () => pm.expect(pm.response.json().message).to.exist);"
+              ]
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "4. /me Endpoint",
+      "item": [
+        {
+          "name": "✅ GET /me - Token ile",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{authToken}}"}],
+            "url": {"raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"]}
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 olmalı', () => pm.response.to.have.status(200));",
+                "pm.test('Kullanıcı bilgileri dönmeli', () => pm.expect(pm.response.json().email).to.exist);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "❌ BUG-006: GET /me - Token Yok (NPE Test)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"]},
+            "description": "BEKLENEN: 401 Unauthorized\nGERÇEKLEŞEN: 500 NullPointerException (BUG-006)"
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('BUG-006: 401 olmalı, 500 NPE dönmemeli', () => {",
+                "  pm.expect(pm.response.code).to.not.equal(500, ",
+                "    'BUG: authHeader null kontrolü yok, NPE atıyor');",
+                "});"
+              ]
+            }
+          }]
+        }
+      ]
+    }
+  ]
+}
