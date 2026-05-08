@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+*.code-workspace
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+
+### Application Secrets ###
+# application-dev.properties  (geliştirme ortamı ayarları — gitignore'lu)
