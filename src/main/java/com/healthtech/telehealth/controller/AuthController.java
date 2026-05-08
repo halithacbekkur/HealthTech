@@ -1,6 +1,9 @@
 package com.healthtech.telehealth.controller;
 
+import com.healthtech.telehealth.dto.UserResponseDTO;
 import com.healthtech.telehealth.entity.User;
+import com.healthtech.telehealth.exception.EmailAlreadyExistsException;
+import com.healthtech.telehealth.exception.InvalidCredentialsException;
 import com.healthtech.telehealth.repository.UserRepository;
 import com.healthtech.telehealth.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,9 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -34,29 +40,50 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Geçersiz e-posta veya şifre")
     })
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody User request) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody User request) {
 
+        // BUG-005 FIX: Kullanici bulunamazsa veya sifre yanlissa 401 donuyor (500 degil)
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Kullanici bulunamadi"));
+                .orElseThrow(() -> new InvalidCredentialsException("Geçersiz e-posta veya şifre"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Sifre yanlis");
+            throw new InvalidCredentialsException("Geçersiz e-posta veya şifre");
         }
 
-        // Artik token icine rol bilgisi de ekleniyor
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 
-        return Map.of("token", token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @Operation(summary = "Yeni kullanıcı kaydı", description = "Hasta, doktor veya admin rolünde yeni kullanıcı oluşturur")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Kayıt başarılı"),
-            @ApiResponse(responseCode = "400", description = "Geçersiz bilgi veya eksik alan")
+            @ApiResponse(responseCode = "201", description = "Kayıt başarılı"),
+            @ApiResponse(responseCode = "400", description = "Geçersiz bilgi veya eksik alan"),
+            @ApiResponse(responseCode = "409", description = "Bu e-posta zaten kayıtlı")
     })
     @PostMapping("/register")
-    public User register(@Valid @RequestBody User request) {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody User request) {
+
+        // BUG-009 FIX: Ayni email ile cift kayit kontrolu (500 yerine 409 donuyor)
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Bu e-posta adresi zaten kayıtlı: " + request.getEmail());
+        }
+
+        // Sifreyi hashle
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        return userRepository.save(request);
+        request.setCreatedAt(LocalDateTime.now());
+
+        User savedUser = userRepository.save(request);
+
+        // BUG-004 FIX: Sifre hash'i donmemeli — UserResponseDTO kullaniliyor
+        UserResponseDTO responseDTO = new UserResponseDTO(
+                savedUser.getId(),
+                savedUser.getFullName(),
+                savedUser.getEmail(),
+                savedUser.getPhone(),
+                savedUser.getRole()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }

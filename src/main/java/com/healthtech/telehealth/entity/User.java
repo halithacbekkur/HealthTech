@@ -33,5 +33,14 @@ public class User {
     @NotNull(message = "Rol boş olamaz")
     @Enumerated(EnumType.STRING)
     private Role role;
+
     private LocalDateTime createdAt;
+
+    // BUG-010 FIX: createdAt otomatik dolduruluyor
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.healthtech.telehealth.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,27 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Map<String, Object> handleUnauthorizedAccess(UnauthorizedAccessException ex) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    // Gecersiz kimlik bilgileri hatasi (401)
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, Object> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    // Email zaten kayitli hatasi (409)
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, Object> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    // Veritabani butunluk hatasi (409) — unique constraint ihlali
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, Object> handleDataIntegrity(DataIntegrityViolationException ex) {
+        return buildErrorResponse("Veri bütünlüğü hatası: Tekrarlanan kayıt", HttpStatus.CONFLICT);
     }
 
     // Validasyon hatalari (400) — form dogrulama

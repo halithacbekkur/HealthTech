@@ -439,7 +439,91 @@ CANCELLED  CANCELLED
 
 ---
 
+# 📅 HAFTA 3 – Bug Fix ve Kod Kalitesi
+
+### 🎯 Sprint Goal
+
+HataListesi'ndeki kritik bugları düzeltmek ve kod kalitesini artırmak.
+
+### 📋 Görev Durumu
+
+| Görev | Bug | Sorumlu | Durum |
+|-------|-----|---------|-------|
+| G11: SecurityConfig düzeltme | BUG-002 | Ahmet Akif Yılmaz | ✅ Zaten düzeltilmiş |
+| G12: AuthController düzeltme | BUG-004, 005, 009 | Zelal Ergin | ✅ Tamamlandı |
+| G13: UserService düzeltme | BUG-007, 008 | Halit Hacbekkur | ✅ Tamamlandı |
+| G14: User entity düzeltme | BUG-010 | Nedim İsa | ✅ Tamamlandı |
+| G15: Projeakisi güncelleme | — | Cena İsmail | ✅ Tamamlandı |
+
+---
+
+## 🔐 G11: SecurityConfig (BUG-002)
+**Durum:** ✅ Zaten düzeltilmiş
+
+SecurityConfig zaten doğru yapılandırılmış:
+* `/api/auth/**` → Herkese açık
+* `/swagger-ui/**` → Herkese açık
+* `PUT /api/appointments/*/approve` → Sadece DOCTOR
+* Diğer tüm endpoint'ler → `authenticated()`
+
+---
+
+## 🔧 G12: AuthController Düzeltmeleri
+
+### BUG-004 FIX — Register şifre hash dönüyordu
+* **Sorun:** `register()` tüm `User` nesnesini dönüyordu (hash dahil)
+* **Çözüm:** `UserResponseDTO` dönüyor, şifre alanı yanıtta yok
+* **HTTP Kodu:** 200 → **201 Created**
+
+### BUG-005 FIX — Login yanlış şifrede 500 dönüyordu
+* **Sorun:** `RuntimeException` fırlatılıyordu → 500 Internal Server Error
+* **Çözüm:** `InvalidCredentialsException` → **401 Unauthorized**
+* Güvenlik notu: "Kullanıcı bulunamadı" yerine "Geçersiz e-posta veya şifre" mesajı (bilgi sızıntısı önleme)
+
+### BUG-009 FIX — Aynı email ile kayıt 500 dönüyordu
+* **Sorun:** Duplicate email → `DataIntegrityViolationException` → 500
+* **Çözüm:** Kayıt öncesi email kontrolü → `EmailAlreadyExistsException` → **409 Conflict**
+
+---
+
+## 🔧 G13: UserService Düzeltmeleri
+
+### BUG-007 FIX — createUser şifreyi hash'lemiyordu
+* **Sorun:** `UserController.createUser()` şifreyi düz metin kaydediyordu
+* **Çözüm:** `passwordEncoder.encode()` eklendi, `UserResponseDTO` dönüyor
+
+### BUG-008 FIX — Update'te rol kayboluyor
+* **Sorun:** `updateUser()` request'teki rol null gelirse mevcut rol siliniyordu
+* **Çözüm:** Rol alanı güncellenmez, mevcut rol korunur
+
+---
+
+## 🔧 G14: User Entity Düzeltmesi
+
+### BUG-010 FIX — createdAt NULL kalıyordu
+* **Sorun:** `createdAt` alanı register sırasında set edilmiyordu → DB'de NULL
+* **Çözüm:** `@PrePersist` annotation'ı ile otomatik `LocalDateTime.now()` atanıyor
+
+---
+
+## 📊 Bug Fix Özeti
+
+| Bug ID | Seviye | Sorun | Düzeltme | HTTP Kodu |
+|--------|--------|-------|----------|-----------|
+| BUG-002 | 🔴 Kritik | Endpoint'ler açık | ✅ Zaten düzeltilmiş | — |
+| BUG-004 | 🔴 Kritik | Register şifre dönüyor | UserResponseDTO | 201 |
+| BUG-005 | 🟠 Orta | Login 500 hatası | InvalidCredentialsException | 401 |
+| BUG-007 | 🟠 Orta | createUser hash yok | passwordEncoder eklendi | 201 |
+| BUG-008 | 🟠 Orta | Update rol kaybı | Rol korunuyor | 200 |
+| BUG-009 | 🟠 Orta | Duplicate email 500 | EmailAlreadyExistsException | 409 |
+| BUG-010 | 🟡 Düşük | createdAt NULL | @PrePersist | — |
+
+### Yeni Exception Sınıfları:
+* `InvalidCredentialsException` → 401 Unauthorized
+* `EmailAlreadyExistsException` → 409 Conflict
+
+---
+
 ## 📌 Genel Sonuç
 
-Proje kapsamında backend tarafında güvenli, katmanlı mimariye sahip ve JWT ile korunan bir REST API başarıyla geliştirilmiştir. Hafta 1'de tüm analiz ve planlama görevleri, Hafta 2'de backend güçlendirme görevleri tamamlanmıştır. Toplam **10 görev** başarıyla tamamlanmıştır.
-
+Proje kapsamında backend tarafında güvenli, katmanlı mimariye sahip ve JWT ile korunan bir REST API başarıyla geliştirilmiştir. Hafta 1'de analiz/planlama, Hafta 2'de backend güçlendirme, Hafta 3'te bug fix görevleri tamamlanmıştır. Toplam **15 görev** başarıyla tamamlanmıştır.

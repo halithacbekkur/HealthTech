@@ -44,9 +44,9 @@ public class UserController {
     }
 
     @Operation(summary = "Yeni kullanıcı oluştur", description = "Sisteme yeni bir kullanıcı ekler")
-    @ApiResponse(responseCode = "200", description = "Kullanıcı başarıyla oluşturuldu")
+    @ApiResponse(responseCode = "201", description = "Kullanıcı başarıyla oluşturuldu")
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public UserResponseDTO createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
