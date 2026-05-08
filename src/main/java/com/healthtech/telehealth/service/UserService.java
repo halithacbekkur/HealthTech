@@ -116,4 +116,32 @@ public class UserService {
                 user.getRole()
         );
     }
+
+    // G17: Doktor listeleme (hasta randevu alirken doktor secimi icin)
+    public List<UserResponseDTO> getDoctors() {
+        return userRepository.findByRole(com.healthtech.telehealth.entity.Role.DOCTOR)
+                .stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhone(),
+                        user.getRole()
+                ))
+                .toList();
+    }
+
+    // G17: Rol bazli kullanici listeleme
+    public List<UserResponseDTO> getUsersByRole(com.healthtech.telehealth.entity.Role role) {
+        return userRepository.findByRole(role)
+                .stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhone(),
+                        user.getRole()
+                ))
+                .toList();
+    }
 }

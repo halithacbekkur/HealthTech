@@ -81,4 +81,11 @@ public class UserController {
 
         return userService.getCurrentUser(email);
     }
+
+    @Operation(summary = "Doktor listesi", description = "Sistemdeki tüm doktorları listeler (randevu alma için)")
+    @ApiResponse(responseCode = "200", description = "Doktor listesi başarıyla döndü")
+    @GetMapping("/doctors")
+    public List<UserResponseDTO> getDoctors() {
+        return userService.getDoctors();
+    }
 }
