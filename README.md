@@ -1,169 +1,130 @@
-# 🏥 HealthTech – Tele-Sağlık Platformu
+# 🏥 HealthTech — Tele-Sağlık Platformu
 
-Tele-Sağlık Platformu, hasta ve doktor arasındaki sağlık hizmetlerini dijital ortama taşıyan bir web uygulamasıdır. Uzaktan randevu alma, video görüşme, tıbbi kayıt yönetimi ve e-reçete özelliklerini sunar.
-
----
+Tele-Sağlık Platformu, hastaların doktorlarla çevrimiçi randevu alabildiği, tıbbi kayıtlarını görüntüleyebildiği ve reçetelerini takip edebildiği bir sağlık yönetim sistemidir.
 
 ## 🚀 Teknoloji Yığını
 
-| Katman | Teknoloji |
-|--------|-----------|
-| **Backend** | Java 17, Spring Boot 4.0.6 |
-| **Veritabanı** | MySQL 8.x |
-| **ORM** | Spring Data JPA + Hibernate |
-| **Güvenlik** | Spring Security + JWT (jjwt 0.12.6) |
-| **API Dokümantasyonu** | springdoc-openapi 2.8.8 (Swagger UI) |
-| **Build** | Maven |
-| **Frontend** | Angular (planlanan) |
-| **Video** | Jitsi Meet / WebRTC (planlanan) |
+| Teknoloji | Versiyon | Kullanım |
+|-----------|----------|----------|
+| Java | 17 | Backend dili |
+| Spring Boot | 4.0.6 | Web framework |
+| Spring Security | 6.x | Kimlik doğrulama ve yetkilendirme |
+| MySQL | 8.x | Veritabanı |
+| JWT (jjwt) | 0.12.6 | Token tabanlı kimlik doğrulama |
+| Lombok | 1.18.x | Boilerplate kod azaltma |
+| Swagger/OpenAPI | 2.8.8 | API dokümantasyonu |
+| Maven | 3.9.x | Proje yönetimi |
 
----
-
-## 📁 Proje Yapısı
-
-```
-telehealth/
-├── src/main/java/com/healthtech/telehealth/
-│   ├── controller/          # REST API Controller'ları
-│   │   ├── AuthController        # Giriş ve kayıt
-│   │   ├── UserController        # Kullanıcı CRUD
-│   │   ├── AppointmentController # Randevu yönetimi
-│   │   ├── MedicalRecordController # Tıbbi kayıtlar
-│   │   └── PrescriptionController  # Reçete yönetimi
-│   ├── service/             # İş mantığı katmanı
-│   ├── repository/          # Veritabanı erişim katmanı
-│   ├── entity/              # JPA Entity modelleri
-│   ├── dto/                 # Data Transfer Objects
-│   ├── exception/           # Özel exception sınıfları
-│   ├── security/            # JWT filtre ve güvenlik yapılandırması
-│   └── config/              # Swagger ve uygulama yapılandırması
-├── src/main/resources/
-│   └── application.properties  # Veritabanı ve uygulama ayarları
-├── docs/                    # Proje dokümantasyonu
-│   ├── Gorev01_Mobil_Uygulama_Gereksinim_Analizi.md
-│   ├── Gorev02_API_Dokumantasyonu.md
-│   ├── Gorev03_Veritabani_Sema_Tasarimi.md
-│   ├── Gorev04_Paydaslar_ve_Iletisim_Plani.md
-│   └── Gorev05_Video_Konferans_Arastirmasi.md
-├── Projeakisi.md            # Haftalık ilerleme dokümanı
-├── pom.xml                  # Maven bağımlılıkları
-└── README.md                # Bu dosya
-```
-
----
-
-## ⚙️ Kurulum ve Çalıştırma
+## 📦 Kurulum
 
 ### Gereksinimler
 - Java 17+
-- Maven 3.8+
 - MySQL 8.x
+- Maven 3.9+ (veya projedeki `mvnw` kullanılabilir)
 
-### 1. Veritabanı Oluşturma
+### 1. Projeyi Klonlayın
+```bash
+git clone https://github.com/halithacbekkur/HealthTech.git
+cd HealthTech
+```
+
+### 2. Veritabanını Oluşturun
 ```sql
 CREATE DATABASE telehealth_db;
 ```
 
-### 2. `application.properties` Ayarları
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/telehealth_db
-spring.datasource.username=root
-spring.datasource.password=YOUR_PASSWORD
-spring.jpa.hibernate.ddl-auto=update
-```
-
-### 3. Projeyi Çalıştırma
+### 3. Ortam Değişkenlerini Ayarlayın
 ```bash
-cd telehealth
-mvn spring-boot:run
+# Windows (PowerShell)
+$env:DB_PASSWORD = "your_mysql_password"
+$env:JWT_SECRET = "your_jwt_secret_key_min_32_chars"
 ```
 
-### 4. API'leri Test Etme
-- **Swagger UI:** http://localhost:8080/swagger-ui/index.html
-- **API Docs:** http://localhost:8080/v3/api-docs
-
----
-
-## 📡 API Endpoint'leri
-
-### 🔐 Authentication
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| POST | `/api/auth/register` | Yeni kullanıcı kaydı |
-| POST | `/api/auth/login` | Giriş (JWT token) |
-
-### 👥 Users
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/users` | Tüm kullanıcılar |
-| GET | `/api/users/{id}` | ID ile kullanıcı |
-| GET | `/api/users/me` | Kendi profilim |
-| PUT | `/api/users/{id}` | Güncelle |
-| DELETE | `/api/users/{id}` | Sil |
-
-### 📅 Appointments
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| POST | `/api/appointments` | Randevu oluştur |
-| GET | `/api/appointments/my` | Hasta randevuları |
-| GET | `/api/appointments/doctor` | Doktor randevuları |
-| PUT | `/api/appointments/{id}/approve` | Onayla (DOCTOR) |
-| PUT | `/api/appointments/{id}/cancel` | İptal et |
-| PUT | `/api/appointments/{id}/complete` | Tamamla (DOCTOR) |
-
-### 🏥 Medical Records
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/medical-records/my` | Kendi kaydım (PATIENT) |
-| POST | `/api/medical-records/my` | Kayıt oluştur/güncelle (PATIENT) |
-| GET | `/api/medical-records/patient/{id}` | Hasta kaydı (DOCTOR) |
-
-### 💊 Prescriptions
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| POST | `/api/prescriptions` | Reçete yaz (DOCTOR) |
-| GET | `/api/prescriptions/my` | Reçetelerim (PATIENT) |
-
----
-
-## 🔐 Kimlik Doğrulama
-
-Sistem JWT (JSON Web Token) tabanlı kimlik doğrulama kullanır.
-
-```
-Authorization: Bearer <jwt_token>
+### 4. Uygulamayı Çalıştırın
+```bash
+./mvnw spring-boot:run
 ```
 
-**Roller:** `PATIENT`, `DOCTOR`, `ADMIN`
-
----
-
-## 🔄 Randevu Durum Akışı
-
+### 5. API Dokümantasyonuna Erişin
 ```
-PENDING → APPROVED → COMPLETED
-   ↓         ↓
-CANCELLED  CANCELLED
+http://localhost:8080/swagger-ui.html
 ```
 
-- Sadece **PENDING** → APPROVED (doktor onaylar)
-- Sadece **APPROVED** → COMPLETED (görüşme sonrası)
-- **PENDING** veya **APPROVED** → CANCELLED (iptal)
-- Tamamlanmış randevu iptal edilemez
+## 🔑 API Endpoint'leri
 
----
+### Auth (Kimlik Doğrulama)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| POST | /api/auth/register | Yeni kullanıcı kaydı |
+| POST | /api/auth/login | JWT ile giriş |
+
+### Users (Kullanıcı Yönetimi)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | /api/users | Tüm kullanıcıları listele |
+| GET | /api/users/{id} | Kullanıcı detay |
+| GET | /api/users/me | Giriş yapan kullanıcı |
+| GET | /api/users/doctors | Doktor listesi |
+| PUT | /api/users/{id} | Kullanıcı güncelle |
+| DELETE | /api/users/{id} | Kullanıcı sil |
+
+### Appointments (Randevu Yönetimi)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| POST | /api/appointments | Randevu oluştur |
+| GET | /api/appointments/my | Hasta randevuları |
+| GET | /api/appointments/doctor | Doktor randevuları |
+| PUT | /api/appointments/{id}/approve | Randevu onayla |
+| PUT | /api/appointments/{id}/cancel | Randevu iptal |
+| PUT | /api/appointments/{id}/complete | Randevu tamamla |
+
+### Prescriptions (Reçete)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| POST | /api/prescriptions | Reçete yaz (DOCTOR) |
+| GET | /api/prescriptions/my | Reçetelerim (PATIENT) |
+
+### Medical Records (Tıbbi Kayıt)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| POST | /api/medical-records | Tıbbi kayıt oluştur |
+| GET | /api/medical-records/my | Tıbbi kaydım |
+| GET | /api/medical-records/patient/{id} | Hasta tıbbi kaydı (DOCTOR) |
+
+### Reports (Raporlama)
+| Metod | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | /api/reports/dashboard | Sistem istatistikleri |
+
+## 🔒 Güvenlik
+
+- **BCrypt** ile şifre hash'leme
+- **JWT** token tabanlı kimlik doğrulama (24 saat geçerli)
+- **@PreAuthorize** ile rol bazlı erişim kontrolü (PATIENT, DOCTOR, ADMIN)
+- **CORS** yapılandırması (localhost:4200 izinli)
+- Environment variable ile hassas bilgi yönetimi
+
+## 🗄️ Veritabanı Şeması
+
+```
+users (id, full_name, email, password, phone, role, created_at)
+  │
+  ├──1:N── appointments (id, patient_id, doctor_id, date_time, status, created_at)
+  │                │
+  │                └──1:1── prescriptions (id, appointment_id, medication, dosage, instructions)
+  │
+  └──1:1── medical_records (id, patient_id, blood_type, allergies, chronic_diseases, height, weight, notes)
+```
 
 ## 👥 Ekip
 
 | İsim | Rol |
 |------|-----|
-| Halid Hacbekkur | Scrum Master |
-| Cena İsmail | Frontend Geliştirme |
-| Zelal Ergin | Backend Geliştirme |
-| Nedim İsa | Gereksinim Analizi |
-| Ahmet Akif Yılmaz | Veritabanı & Güvenlik |
-
----
+| Halid Hacbekkur | Scrum Master & Proje Yönetimi |
+| Cena İsmail | Frontend Geliştirme / Mobil Analiz |
+| Zelal Ergin | Backend Geliştirme / Altyapı |
+| Nedim İsa | Gereksinim Toplama ve Belgeleme |
+| Ahmet Akif Yılmaz | Veritabanı Tasarımı & Güvenlik |
 
 ## 📄 Lisans
 

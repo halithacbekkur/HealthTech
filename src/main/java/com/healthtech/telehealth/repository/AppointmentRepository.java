@@ -19,4 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     // Bir doktorun belirli durumdaki randevularını getir
     List<Appointment> findByDoctorIdAndStatus(Long doctorId, AppointmentStatus status);
+
+    // Raporlama: duruma gore randevu sayisi
+    long countByStatus(AppointmentStatus status);
 }
