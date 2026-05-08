@@ -430,11 +430,261 @@ docs: Hafta 2 proje akışı güncellendi
 
 | # | Görev | Sorumlu | Durum |
 |---|-------|---------|-------|
-| G11 | Proje İletişim Planı Oluşturma | Halit Hacbekkur | ⏳ |
-| G12 | Veritabanı Tasarımı ve Modelleme | Cena İsmail | ⏳ |
-| G13 | Risk Analizi ve Yönetim Planı | Zelal Ergin | ⏳ |
-| G14 | Temel Kullanıcı Arayüzü Tasarımı | Ahmet Akif Yılmaz | ⏳ |
-| G15 | Veri Ön İşleme ve Temizleme Algoritmaları | Nedim İsa | ⏳ |
+| G11 | Proje İletişim Planı Oluşturma | Halit Hacbekkur | ✅ |
+| G12 | Veritabanı Tasarımı ve Modelleme | Cena İsmail | ✅ |
+
+## 🗄️ G12: Veritabanı Tasarımı ve Modelleme
+**Sorumlu:** CENA İSMAİL
+
+### ER Diyagramı (Entity-Relationship)
+
+```
+┌──────────┐       ┌──────────────┐       ┌──────────────┐
+│  users   │──1:N──│ appointments │──1:1──│ prescriptions│
+│ (hasta/  │       │              │       │              │
+│  doktor) │       └──────────────┘       └──────────────┘
+│          │
+│          │──1:1──┌──────────────────┐
+└──────────┘       │ medical_records  │
+                   └──────────────────┘
+```
+
+### Tablo Şemaları
+
+**1. users**
+
+| Kolon | Tip | Kısıtlama | Açıklama |
+|-------|-----|-----------|----------|
+| id | BIGINT | PK, AUTO_INCREMENT | Birincil anahtar |
+| full_name | VARCHAR(255) | NOT NULL | Ad soyad |
+| email | VARCHAR(255) | UNIQUE, NOT NULL | E-posta |
+| password | VARCHAR(255) | NOT NULL | BCrypt hash |
+| phone | VARCHAR(255) | NULLABLE | Telefon |
+| role | ENUM | NOT NULL | PATIENT / DOCTOR / ADMIN |
+| created_at | DATETIME | NULLABLE | Kayıt tarihi (@PrePersist) |
+
+**2. appointments**
+
+| Kolon | Tip | Kısıtlama | Açıklama |
+|-------|-----|-----------|----------|
+| id | BIGINT | PK, AUTO_INCREMENT | Birincil anahtar |
+| patient_id | BIGINT | FK → users.id | Hasta |
+| doctor_id | BIGINT | FK → users.id | Doktor |
+| appointment_date | DATETIME | NOT NULL | Randevu tarihi |
+| status | ENUM | NOT NULL | PENDING/APPROVED/CANCELLED/COMPLETED |
+| created_at | DATETIME | NULLABLE | Oluşturma tarihi |
+
+**3. medical_records**
+
+| Kolon | Tip | Kısıtlama | Açıklama |
+|-------|-----|-----------|----------|
+| id | BIGINT | PK, AUTO_INCREMENT | Birincil anahtar |
+| patient_id | BIGINT | FK → users.id, UNIQUE | Hasta (1:1) |
+| blood_group | VARCHAR(255) | NULLABLE | Kan grubu |
+| allergies | TEXT | NULLABLE | Alerjiler |
+| past_diseases | TEXT | NULLABLE | Geçmiş hastalıklar |
+| height | DOUBLE | NULLABLE | Boy (cm) |
+| weight | DOUBLE | NULLABLE | Kilo (kg) |
+| updated_at | DATETIME | NULLABLE | Son güncelleme |
+
+**4. prescriptions**
+
+| Kolon | Tip | Kısıtlama | Açıklama |
+|-------|-----|-----------|----------|
+| id | BIGINT | PK, AUTO_INCREMENT | Birincil anahtar |
+| appointment_id | BIGINT | FK → appointments.id, UNIQUE | Randevu (1:1) |
+| medicines | TEXT | NOT NULL | İlaç listesi |
+| instructions | TEXT | NULLABLE | Kullanım talimatları |
+| created_at | DATETIME | NOT NULL | Yazılma tarihi (@PrePersist) |
+
+### İlişki Tablosu
+
+| İlişki | Tip | Açıklama |
+|--------|-----|----------|
+| users → appointments | 1:N | Bir kullanıcının birçok randevusu olabilir |
+| users → medical_records | 1:1 | Her hastanın tek tıbbi kaydı |
+| appointments → prescriptions | 1:1 | Her randevunun tek reçetesi |
+
+---
+| G13 | Risk Analizi ve Yönetim Planı | Zelal Ergin | ✅ |
+| G14 | Temel Kullanıcı Arayüzü Tasarımı | Ahmet Akif Yılmaz | ✅ |
+| G15 | Veri Ön İşleme ve Temizleme Algoritmaları | Nedim İsa | ✅ |
+
+---
+
+## ⚠️ G13: Risk Analizi ve Yönetim Planı
+**Sorumlu:** ZELAL ERGİN
+
+### Risk Matrisi
+
+| ID | Risk | Olasılık | Etki | Seviye | Önleyici Tedbir |
+|----|------|----------|------|--------|-----------------|
+| R-01 | DB şifresi GitHub'da açık | Yüksek | 🔴 Kritik | **Kritik** | Environment variable kullanımı ✅ |
+| R-02 | JWT secret hardcoded | Yüksek | 🔴 Kritik | **Kritik** | @Value ile externalize ✅ |
+| R-03 | SQL Injection saldırısı | Düşük | 🔴 Kritik | **Orta** | JPA Parameterized Queries |
+| R-04 | Ekip üyesi ayrılması | Düşük | 🟠 Yüksek | **Orta** | Kod dokümantasyonu |
+| R-05 | Proje takvimi kayması | Orta | 🟠 Yüksek | **Yüksek** | Haftalık sprint review |
+| R-06 | Video entegrasyon zorluğu | Orta | 🟡 Orta | **Orta** | Jitsi Meet (iframe) |
+| R-07 | DB performans sorunu | Düşük | 🟡 Orta | **Düşük** | Index, sorgu optimizasyonu |
+| R-08 | KVKK uyumsuzluğu | Orta | 🔴 Kritik | **Yüksek** | Şifreleme, erişim logları |
+
+### Acil Durum Planları
+
+**Veri Sızıntısı:** DB şifresini değiştir → Git history temizle → Kullanıcılara bildir
+**Sunucu Çökmesi:** MySQL yedeklerini kontrol et → Uygulamayı yeniden başlat
+**Takvim Kayması:** Kapsam daralt → Kritik özelliklere odaklan → Danışmana bildir
+
+---
+
+## 🎨 G14: Temel Kullanıcı Arayüzü Tasarımı
+**Sorumlu:** AHMET AKİF YILMAZ
+
+### Sayfa Haritası (Sitemap)
+
+```
+🏠 Ana Sayfa
+├── 🔐 Giriş / Kayıt
+│   ├── Login
+│   └── Register
+├── 👤 HASTA Paneli
+│   ├── Dashboard (Özet)
+│   ├── Randevularım
+│   ├── Yeni Randevu Al
+│   ├── Tıbbi Kayıtlarım
+│   ├── Reçetelerim
+│   └── Profil Ayarları
+├── 🩺 DOKTOR Paneli
+│   ├── Dashboard (Özet)
+│   ├── Bekleyen Randevular
+│   ├── Hasta Listesi
+│   ├── Reçete Yaz
+│   └── Video Görüşme
+└── ⚙️ ADMİN Paneli
+    ├── Kullanıcı Yönetimi
+    ├── Sistem Raporları
+    └── Ayarlar
+```
+
+### Ekran Listesi ve Wireframe Açıklamaları
+
+| Ekran | Bileşenler | API Bağlantısı |
+|-------|-----------|----------------|
+| Login | Email input, şifre input, giriş butonu | POST /api/auth/login |
+| Register | Ad, email, şifre, telefon, rol seçimi | POST /api/auth/register |
+| Hasta Dashboard | Yaklaşan randevular, son reçeteler | GET /appointments/my |
+| Randevu Al | Doktor listesi, tarih seçici, onayla | POST /api/appointments |
+| Tıbbi Kayıtlarım | Kan grubu, alerji, geçmiş hastalık | GET /api/medical-records/my |
+| Doktor Dashboard | Bekleyen/onaylı randevular | GET /appointments/doctor |
+| Reçete Yaz | Hasta seçimi, ilaç, doz, talimat | POST /api/prescriptions |
+| Admin Kullanıcılar | Tablo, arama, sil, düzenle | GET/DELETE /api/users |
+
+### Tasarım Sistemi
+
+**Renk Paleti:**
+* Primary: `#2563EB` (Mavi — güven, sağlık)
+* Success: `#16A34A` (Yeşil — onay)
+* Warning: `#F59E0B` (Sarı — uyarı)
+* Danger: `#DC2626` (Kırmızı — iptal/hata)
+* Background: `#F8FAFC` (Açık gri)
+
+**Tipografi:** Inter / Roboto (Google Fonts)
+
+**Teknoloji:** Angular 17+ (Component-based, Responsive)
+
+---
+
+## 🧹 G15: Veri Ön İşleme ve Temizleme Algoritmaları
+**Sorumlu:** NEDİM İSA
+
+### 1. Girdi Sanitizasyonu (Input Sanitization)
+
+| Veri | Temizleme Kuralı | Uygulama Yeri |
+|------|------------------|---------------|
+| E-posta | Trim + lowercase + format doğrulama | `@Email` annotation |
+| Ad Soyad | Trim + boş kontrol | `@NotBlank` annotation |
+| Şifre | Min uzunluk + BCrypt hash | Service katmanı |
+| Telefon | Opsiyonel, format kontrolü | Entity katmanı |
+| Rol | Enum doğrulama (PATIENT/DOCTOR/ADMIN) | `@Enumerated` |
+
+### 2. Eksik Veri Doldurma Stratejileri
+
+| Alan | Strateji | Kod Karşılığı |
+|------|----------|---------------|
+| createdAt | Otomatik doldur (şimdiki zaman) | `@PrePersist` |
+| phone | NULL bırak (opsiyonel) | `nullable = true` |
+| status | Varsayılan: PENDING | Service'te set edilir |
+| role | Zorunlu alan, boş bırakılamaz | `@NotNull` |
+
+### 3. Aykırı Değer Tespiti
+
+| Kontrol | Kural | Exception |
+|---------|-------|-----------|
+| Geçmiş tarihte randevu | `appointmentDate.isBefore(now)` | `IllegalArgumentException` |
+| Doktor olmayan kullanıcıya randevu | `doctor.role != DOCTOR` | `IllegalArgumentException` |
+| Geçersiz durum geçişi | CANCELLED → APPROVED | `InvalidStatusTransitionException` |
+| Mevcut email ile kayıt | `findByEmail().isPresent()` | `EmailAlreadyExistsException` |
+
+### 4. Veri Dönüşüm Pipeline
+
+```
+Kullanıcı Girdisi
+    ↓
+[1] Jakarta Validation (@Valid, @NotBlank, @Email)
+    ↓
+[2] Controller — iş kuralı kontrolü (duplicate email)
+    ↓
+[3] Service — şifre hash, tarih kontrolü, durum geçişi
+    ↓
+[4] Repository — JPA ile DB'ye kayıt
+    ↓
+[5] Response — Entity → DTO dönüşümü (şifre gizleme)
+```
+
+---
+
+## 📞 G11: Proje İletişim Planı Oluşturma
+**Sorumlu:** HALİT HACBEKKUR
+
+### İletişim Kanalları
+
+| Kanal | Amaç | Katılımcılar | Sıklık |
+|-------|------|-------------|--------|
+| WhatsApp Grubu | Anlık iletişim, hızlı sorular | Tüm ekip | Sürekli |
+| GitHub Issues | Bug raporlama, görev takibi | Tüm ekip | Her görevde |
+| Sprint Toplantısı | Haftalık ilerleme değerlendirme | Tüm ekip | Haftada 1 |
+| Code Review | Kod kalitesi, bilgi paylaşımı | Geliştirici ekip | Her PR'da |
+| E-posta | Resmi bilgilendirme, danışman iletişimi | Scrum Master + Danışman | Gerektiğinde |
+
+### Haftalık Toplantı Takvimi
+
+| Gün | Saat | Toplantı | Süre | Sorumlu |
+|-----|------|----------|------|---------|
+| Pazartesi | 10:00 | Sprint Planlama | 30 dk | Halit (SM) |
+| Çarşamba | 14:00 | Teknik Değerlendirme | 20 dk | Zelal |
+| Cuma | 16:00 | Sprint Review & Demo | 30 dk | Halit (SM) |
+
+### RACI Matrisi
+
+| Faaliyet | Halit | Cena | Zelal | Nedim | Ahmet Akif |
+|----------|-------|------|-------|-------|------------|
+| Sprint Planlama | **R** | I | I | I | I |
+| Backend Geliştirme | I | C | **R** | C | C |
+| Frontend Geliştirme | I | **R** | C | C | C |
+| DB Tasarımı | **R** | C | C | I | C |
+| Güvenlik | I | I | C | I | **R** |
+| Dokümantasyon | A | C | C | **R** | C |
+| Test | A | C | C | C | **R** |
+
+*R: Responsible, A: Accountable, C: Consulted, I: Informed*
+
+### Eskalasyon Süreci
+
+```
+Seviye 1: Ekip üyesi → WhatsApp grubunda paylaşım (0-2 saat)
+Seviye 2: Çözülemezse → Sprint toplantısında tartışma (2-24 saat)
+Seviye 3: Hâlâ çözülemediyse → Scrum Master (Halit) devreye girer (24-48 saat)
+Seviye 4: Kritik sorun → Proje Danışmanına bildirim (48+ saat)
+```
 
 ---
 
