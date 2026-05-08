@@ -50,7 +50,7 @@ public class AuthController {
             throw new InvalidCredentialsException("Geçersiz e-posta veya şifre");
         }
 
-        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId());
 
         return ResponseEntity.ok(Map.of("token", token));
     }
