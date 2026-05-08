@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthTech — Tele-Sağlık Platformu</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --white: #ffffff;
+    --primary: #0a6ebd;
+    --primary-dark: #084f8a;
+    --primary-light: #e8f2fb;
+    --accent: #00b386;
+    --accent-light: #e0f7f1;
+    --danger: #e53e3e;
+    --text: #1a202c;
+    --text-2: #4a5568;
+    --text-3: #a0aec0;
+    --border: #e2e8f0;
+    --shadow: 0 4px 24px rgba(10,110,189,0.08);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    gap: 8px;
+    padding: 20px 32px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .nav-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--primary);
+    margin-right: 16px;
+  }
+  .nav-btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* PAGES */
+  .page { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* LOGIN */
+  .login-wrap {
+    min-height: calc(100vh - 73px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e8f2fb 0%, #f0f4f8 60%, #e0f7f1 100%);
+  }
+  .login-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .login-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+  .login-sub {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 32px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--primary); }
+  .role-select {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .role-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .role-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--primary-dark); }
+
+  /* DASHBOARD */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--text);
+  }
+  .page-sub { font-size: 14px; color: var(--text-3); margin-top: 2px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+  }
+  .stat-card.green { border-left-color: var(--accent); }
+  .stat-card.orange { border-left-color: #f6ad55; }
+  .stat-icon { font-size: 28px; margin-bottom: 10px; }
+  .stat-value { font-size: 32px; font-weight: 600; color: var(--text); }
+  .stat-label { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-blue { background: var(--primary-light); color: var(--primary); }
+  .badge-green { background: var(--accent-light); color: var(--accent); }
+  .badge-orange { background: #fef3cd; color: #b7791f; }
+  .badge-red { background: #fff5f5; color: var(--danger); }
+
+  .appointment-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .appointment-item:last-child { border-bottom: none; }
+  .appt-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .appt-info { flex: 1; }
+  .appt-name { font-size: 14px; font-weight: 500; }
+  .appt-time { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+  .btn-sm {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    transition: background 0.2s;
+  }
+  .btn-sm:hover { background: var(--primary-dark); }
+  .btn-sm.outline {
+    background: var(--white);
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+  }
+
+  /* VIDEO CALL */
+  .video-section {
+    background: #1a202c;
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+  }
+  .video-placeholder {
+    background: #2d3748;
+    border-radius: 12px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #a0aec0;
+    font-size: 14px;
+    gap: 10px;
+  }
+  .video-controls { display: flex; gap: 12px; justify-content: center; }
+  .video-btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .video-btn.start { background: var(--accent); color: white; }
+  .video-btn.end { background: var(--danger); color: white; }
+  .video-btn.mute { background: #4a5568; color: white; }
+
+  /* DOCTOR SEARCH */
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .search-input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--primary); }
+  .doctor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .doctor-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .doctor-card:hover { border-color: var(--primary); }
+  .doctor-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .doctor-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .doctor-spec { font-size: 12px; color: var(--text-3); margin-bottom: 12px; }
+  .doctor-rating { font-size: 12px; color: #f6ad55; margin-bottom: 14px; }
+
+  /* RECORDS */
+  .record-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .record-item:last-child { border-bottom: none; }
+  .record-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .record-title { font-size: 14px; font-weight: 500; }
+  .record-date { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <span class="nav-title">🏥 HealthTech</span>
+  <button class="nav-btn active" onclick="showPage('login')">🔐 Giriş</button>
+  <button class="nav-btn" onclick="showPage('patient')">👤 Hasta Paneli</button>
+  <button class="nav-btn" onclick="showPage('doctor')">👨‍⚕️ Doktor Paneli</button>
+  <button class="nav-btn" onclick="showPage('video')">🎥 Video Görüşme</button>
+  <button class="nav-btn" onclick="showPage('records')">📋 Sağlık Kayıtları</button>
+</nav>
+
+<!-- LOGIN -->
+<div id="login" class="page active">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">🏥 HealthTech</div>
+      <div class="login-sub">Tele-Sağlık Platformu — Güvenli Giriş</div>
+
+      <div class="role-select">
+        <button class="role-btn active" onclick="setRole(this)">👤 Hasta</button>
+        <button class="role-btn" onclick="setRole(this)">👨‍⚕️ Doktor</button>
+        <button class="role-btn" onclick="setRole(this)">🛡️ Admin</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">E-posta Adresi</label>
+        <input type="email" class="form-input" placeholder="ornek@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Şifre</label>
+        <input type="password" class="form-input" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="showPage('patient')">Giriş Yap →</button>
+
+      <div style="text-align:center; margin-top:16px; font-size:13px; color:var(--text-3)">
+        Hesabınız yok mu? <a href="#" style="color:var(--primary)">Kayıt Ol</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HASTA PANELİ -->
+<div id="patient" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Merhaba, Akif 👋</div>
+      <div class="page-sub">Bugün nasıl hissediyorsunuz?</div>
+    </div>
+    <button class="btn-sm" onclick="showPage('video')">🎥 Görüşme Başlat</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value">3</div>
+      <div class="stat-label">Yaklaşan Randevu</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">12</div>
+      <div class="stat-label">Tamamlanan Görüşme</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon">📋</div>
+      <div class="stat-value">5</div>
+      <div class="stat-label">Tıbbi Kayıt</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">
+        Yaklaşan Randevular
+        <span class="badge badge-blue">3 aktif</span>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👨‍⚕️</div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Mehmet Yılmaz</div>
+          <div class="appt-time">Bugün, 14:30 — Kardiyoloji</div>
+        </div>
+        <button class="btn-sm" onclick="showPage('video')">Katıl</button>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👩‍⚕️</div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Ayşe Kaya</div>
+          <div class="appt-time">Yarın, 10:00 — Dahiliye</div>
+        </div>
+        <button class="btn-sm outline">Detay</button>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👨‍⚕️</div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Ali Demir</div>
+          <div class="appt-time">12 Mayıs, 09:00 — Nöroloji</div>
+        </div>
+        <button class="btn-sm outline">Detay</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Doktor Ara</div>
+      <input type="text" class="search-input" placeholder="🔍 Uzmanlık veya isim ara..." style="width:100%; margin-bottom:12px">
+      <div class="appointment-item">
+        <div class="appt-avatar">👨‍⚕️</div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Mehmet Yılmaz</div>
+          <div class="appt-time">Kardiyoloji • ⭐ 4.9</div>
+        </div>
+        <button class="btn-sm">Randevu</button>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👩‍⚕️</div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Ayşe Kaya</div>
+          <div class="appt-time">Dahiliye • ⭐ 4.7</div>
+        </div>
+        <button class="btn-sm">Randevu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOKTOR PANELİ -->
+<div id="doctor" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Dr. Mehmet Yılmaz 👨‍⚕️</div>
+      <div class="page-sub">Kardiyoloji Uzmanı — Bugün 4 randevu</div>
+    </div>
+    <span class="badge badge-green" style="padding:8px 16px; font-size:13px">🟢 Çevrimiçi</span>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">4</div>
+      <div class="stat-label">Bugünkü Hasta</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-value">2</div>
+      <div class="stat-label">Bekleyen Onay</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon">📝</div>
+      <div class="stat-value">8</div>
+      <div class="stat-label">Bu Hafta Kayıt</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">
+        Bugünkü Randevular
+        <span class="badge badge-orange">2 bekliyor</span>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👤</div>
+        <div class="appt-info">
+          <div class="appt-name">Akif Yılmaz</div>
+          <div class="appt-time">14:30 — <span style="color:var(--accent)">Şimdi</span></div>
+        </div>
+        <button class="btn-sm" onclick="showPage('video')">Başlat</button>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👤</div>
+        <div class="appt-info">
+          <div class="appt-name">Fatma Demir</div>
+          <div class="appt-time">15:30 — Bekliyor</div>
+        </div>
+        <button class="btn-sm outline">Onayla</button>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-avatar">👤</div>
+        <div class="appt-info">
+          <div class="appt-name">Hasan Çelik</div>
+          <div class="appt-time">16:00 — Onaylandı</div>
+        </div>
+        <button class="btn-sm outline">Detay</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Hızlı Kayıt Ekle</div>
+      <div class="form-group">
+        <label class="form-label">Hasta</label>
+        <select class="form-input">
+          <option>Akif Yılmaz</option>
+          <option>Fatma Demir</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tanı / Not</label>
+        <textarea class="form-input" rows="3" placeholder="Tanı veya notlarınızı girin..."></textarea>
+      </div>
+      <button class="btn-sm" style="width:100%; padding:10px">💾 Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- VİDEO GÖRÜŞME -->
+<div id="video" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🎥 Video Görüşme</div>
+      <div class="page-sub">Dr. Mehmet Yılmaz ile görüşme — 14:30</div>
+    </div>
+    <span class="badge badge-green" style="padding:8px 16px; font-size:13px">● Bağlı</span>
+  </div>
+
+  <div class="video-section">
+    <div class="video-placeholder">
+      <div style="font-size:48px">📹</div>
+      <div>Kamera bağlantısı bekleniyor...</div>
+      <div style="font-size:12px">Jitsi Meet üzerinden güvenli bağlantı</div>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn start">▶ Görüşmeye Katıl</button>
+      <button class="video-btn mute">🎤 Sesi Kapat</button>
+      <button class="video-btn mute">📷 Kamerayı Kapat</button>
+      <button class="video-btn end">✕ Görüşmeyi Bitir</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Görüşme Bilgileri</div>
+      <div style="font-size:14px; line-height:2; color:var(--text-2)">
+        <div>👤 <strong>Hasta:</strong> Akif Yılmaz</div>
+        <div>👨‍⚕️ <strong>Doktor:</strong> Dr. Mehmet Yılmaz</div>
+        <div>📅 <strong>Tarih:</strong> 8 Mayıs 2026, 14:30</div>
+        <div>⏱️ <strong>Süre:</strong> 30 dakika</div>
+        <div>🔒 <strong>Şifreleme:</strong> E2E (Jitsi)</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Görüşme Notu</div>
+      <textarea class="form-input" rows="4" placeholder="Görüşme sırasında not alın..."></textarea>
+      <button class="btn-sm" style="margin-top:10px">💾 Notu Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAĞLIK KAYITLARI -->
+<div id="records" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">📋 Sağlık Kayıtları</div>
+      <div class="page-sub">Tüm tıbbi geçmişiniz</div>
+    </div>
+    <span class="badge badge-blue" style="padding:8px 16px; font-size:13px">5 Kayıt</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tıbbi Kayıtlar</div>
+
+    <div class="record-item">
+      <div class="record-icon">🫀</div>
+      <div style="flex:1">
+        <div class="record-title">Kardiyoloji Muayenesi</div>
+        <div class="record-date">8 Mayıs 2026 — Dr. Mehmet Yılmaz</div>
+        <div style="font-size:12px; color:var(--text-2); margin-top:4px">Tansiyon normal, EKG düzenli.</div>
+      </div>
+      <span class="badge badge-green">Normal</span>
+    </div>
+
+    <div class="record-item">
+      <div class="record-icon">💊</div>
+      <div style="flex:1">
+        <div class="record-title">İlaç Reçetesi</div>
+        <div class="record-date">1 Mayıs 2026 — Dr. Ayşe Kaya</div>
+        <div style="font-size:12px; color:var(--text-2); margin-top:4px">Aspirin 100mg — 30 gün.</div>
+      </div>
+      <span class="badge badge-orange">Aktif</span>
+    </div>
+
+    <div class="record-item">
+      <div class="record-icon">🧪</div>
+      <div style="flex:1">
+        <div class="record-title">Kan Tahlili</div>
+        <div class="record-date">20 Nisan 2026 — Dr. Ali Demir</div>
+        <div style="font-size:12px; color:var(--text-2); margin-top:4px">Hemoglobin: 14.2, Kolesterol: 185</div>
+      </div>
+      <span class="badge badge-green">Normal</span>
+    </div>
+
+    <div class="record-item">
+      <div class="record-icon">🫁</div>
+      <div style="flex:1">
+        <div class="record-title">Akciğer Grafisi</div>
+        <div class="record-date">10 Nisan 2026 — Dr. Mehmet Yılmaz</div>
+        <div style="font-size:12px; color:var(--text-2); margin-top:4px">Patoloji tespit edilmedi.</div>
+      </div>
+      <span class="badge badge-green">Temiz</span>
+    </div>
+
+    <div class="record-item">
+      <div class="record-icon">📊</div>
+      <div style="flex:1">
+        <div class="record-title">Genel Muayene</div>
+        <div class="record-date">1 Mart 2026 — Dr. Ayşe Kaya</div>
+        <div style="font-size:12px; color:var(--text-2); margin-top:4px">Rutin kontrol, herhangi bir sorun yok.</div>
+      </div>
+      <span class="badge badge-blue">Tamamlandı</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    if (id === 'login') {
+      document.getElementById('login').querySelector('.login-wrap').style.minHeight = 'calc(100vh - 73px)';
+    }
+  }
+  function setRole(btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
