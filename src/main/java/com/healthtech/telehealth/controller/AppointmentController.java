@@ -89,6 +89,19 @@ public class AppointmentController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Randevu tamamla (Doktor)", description = "Doktor, görüşme sonrası randevuyu tamamlar (durum: COMPLETED)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Randevu başarıyla tamamlandı"),
+            @ApiResponse(responseCode = "400", description = "Geçersiz durum geçişi"),
+            @ApiResponse(responseCode = "404", description = "Randevu bulunamadı")
+    })
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<AppointmentResponseDTO> completeAppointment(@PathVariable Long id) {
+
+        AppointmentResponseDTO response = appointmentService.completeAppointment(id);
+        return ResponseEntity.ok(response);
+    }
+
     // JWT token'dan email çıkaran yardımcı metod
     private String extractEmailFromToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");

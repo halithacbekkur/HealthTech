@@ -1,180 +1,170 @@
-<h1 align="center">🏥 Tele-Sağlık Platformu</h1>
-<h3 align="center">Digital HealthTech Solution for Remote Healthcare</h3>
+# 🏥 HealthTech – Tele-Sağlık Platformu
 
-<p align="center">
-<img src="https://img.shields.io/badge/Status-In%20Development-blue"/>
-<img src="https://img.shields.io/badge/Backend-Java%20SpringBoot-red"/>
-<img src="https://img.shields.io/badge/Frontend-Angular-dd0031"/>
-<img src="https://img.shields.io/badge/Database-MySQL-blue"/>
-<img src="https://img.shields.io/badge/Architecture-Layered-green"/>
-<img src="https://img.shields.io/badge/License-Educational-lightgrey"/>
-</p>
+Tele-Sağlık Platformu, hasta ve doktor arasındaki sağlık hizmetlerini dijital ortama taşıyan bir web uygulamasıdır. Uzaktan randevu alma, video görüşme, tıbbi kayıt yönetimi ve e-reçete özelliklerini sunar.
 
 ---
 
-## 📌 Proje Hakkında
+## 🚀 Teknoloji Yığını
 
-Tele-Sağlık Platformu, hasta ve doktor arasındaki iletişimi dijital ortama taşıyan modern bir sağlık teknolojisi çözümüdür.
-Platform sayesinde kullanıcılar online randevu oluşturabilir, doktor ile görüntülü görüşme yapabilir ve sağlık geçmişlerini güvenli şekilde takip edebilir.
-
-Bu proje ekip çalışması, Agile / Scrum metodolojisi ve katmanlı yazılım mimarisi prensipleri doğrultusunda geliştirilmektedir.
-
----
-
-## ✨ Platform Özellikleri
-
-* 📅 Online randevu oluşturma ve yönetme
-* 🎥 Gerçek zamanlı görüntülü doktor görüşmesi
-* 📂 Dijital sağlık kayıtlarının takibi
-* 🔐 Güvenli kimlik doğrulama sistemi
-* 👥 Rol bazlı kullanıcı yönetimi (Hasta / Doktor / Admin)
-* 📊 Sağlık geçmişi görüntüleme
+| Katman | Teknoloji |
+|--------|-----------|
+| **Backend** | Java 17, Spring Boot 4.0.6 |
+| **Veritabanı** | MySQL 8.x |
+| **ORM** | Spring Data JPA + Hibernate |
+| **Güvenlik** | Spring Security + JWT (jjwt 0.12.6) |
+| **API Dokümantasyonu** | springdoc-openapi 2.8.8 (Swagger UI) |
+| **Build** | Maven |
+| **Frontend** | Angular (planlanan) |
+| **Video** | Jitsi Meet / WebRTC (planlanan) |
 
 ---
 
-## 🧠 Yazılım Mimarisi
+## 📁 Proje Yapısı
 
-Proje **Layered Architecture** yapısı ile geliştirilmektedir.
-
-* Presentation Layer
-* Business Logic Layer
-* Data Access Layer
-* Database Layer
-
----
-
-## 🎥 Video Consultation Architecture
-
-```mermaid
-flowchart TD
-    A[👤 Hasta] --> B[🌐 Angular Frontend]
-    C[👨‍⚕️ Doktor] --> B
-
-    B --> D[🔐 Authentication Service]
-    B --> E[📅 Appointment Service]
-    B --> F[🎥 Video Call Service]
-
-    D --> G[(👥 User Database)]
-    E --> H[(📂 Medical Records Database)]
-    E --> I[(📅 Appointment Database)]
-
-    F --> J[🔄 WebRTC / Signaling Server]
-    J --> K[📹 Real-Time Video Communication]
-
-    B --> L[📨 Notification Service]
-    L --> M[✉️ Email / SMS Notifications]
-
-    E --> N[🩺 Doctor Panel]
-    E --> O[🧾 Patient Panel]
+```
+telehealth/
+├── src/main/java/com/healthtech/telehealth/
+│   ├── controller/          # REST API Controller'ları
+│   │   ├── AuthController        # Giriş ve kayıt
+│   │   ├── UserController        # Kullanıcı CRUD
+│   │   ├── AppointmentController # Randevu yönetimi
+│   │   ├── MedicalRecordController # Tıbbi kayıtlar
+│   │   └── PrescriptionController  # Reçete yönetimi
+│   ├── service/             # İş mantığı katmanı
+│   ├── repository/          # Veritabanı erişim katmanı
+│   ├── entity/              # JPA Entity modelleri
+│   ├── dto/                 # Data Transfer Objects
+│   ├── exception/           # Özel exception sınıfları
+│   ├── security/            # JWT filtre ve güvenlik yapılandırması
+│   └── config/              # Swagger ve uygulama yapılandırması
+├── src/main/resources/
+│   └── application.properties  # Veritabanı ve uygulama ayarları
+├── docs/                    # Proje dokümantasyonu
+│   ├── Gorev01_Mobil_Uygulama_Gereksinim_Analizi.md
+│   ├── Gorev02_API_Dokumantasyonu.md
+│   ├── Gorev03_Veritabani_Sema_Tasarimi.md
+│   ├── Gorev04_Paydaslar_ve_Iletisim_Plani.md
+│   └── Gorev05_Video_Konferans_Arastirmasi.md
+├── Projeakisi.md            # Haftalık ilerleme dokümanı
+├── pom.xml                  # Maven bağımlılıkları
+└── README.md                # Bu dosya
 ```
 
 ---
 
-## 👥 Proje Ekibi
+## ⚙️ Kurulum ve Çalıştırma
 
-| İsim              | Rol                               |
-| ----------------- | --------------------------------- |
-| Halid Hacbekkur   | Scrum Master & Project Management |
-| Nedim İsa         | Requirements Analysis             |
-| Ömer Doğan        | Technology Research               |
-| Zelal Ergin       | Development Environment           |
-| Ahmet Akif Yılmaz | Database Design                   |
-| Cena İsmail       | Frontend Development              |
+### Gereksinimler
+- Java 17+
+- Maven 3.8+
+- MySQL 8.x
 
----
-
-## 📈 Sprint Progress
-
-Sprint 1
-
-████████░░ **80%**
-
-Sprint 2
-
-██░░░░░░░░ **20%**
-
----
-
-## 🗺️ Project Roadmap
-
-* ✅ Teknoloji seçimi
-* ✅ Geliştirme ortamı kurulumu
-* 🔄 Backend API geliştirme
-* 🔄 Frontend ekran geliştirme
-* ⏳ Authentication sistemi
-* ⏳ Video görüşme entegrasyonu
-* ⏳ Mobil uyumluluk
-
----
-
-## 📊 GitHub Stats
-
-<p align="center">
-<img src="https://github-readme-stats.vercel.app/api?username=halithacbekkur&show_icons=true&theme=tokyonight"/>
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=halithacbekkur&theme=tokyonight"/>
-</p>
-
----
-
-## 📈 Activity Graph
-
-<p align="center">
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=halithacbekkur&theme=tokyo-night"/>
-</p>
-
----
-
-## 🐍 Contribution Snake
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake.svg"/>
-</p>
-
----
-
-## 📁 Project Structure
-
-```
-tele-saglik-platformu
-│
-├── backend
-├── frontend
-├── database
-└── docs
+### 1. Veritabanı Oluşturma
+```sql
+CREATE DATABASE telehealth_db;
 ```
 
----
-
-## 🚀 Installation
-
+### 2. `application.properties` Ayarları
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/telehealth_db
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD
+spring.jpa.hibernate.ddl-auto=update
 ```
-git clone https://github.com/organizasyon/tele-saglik-platformu.git
-```
 
-```
-cd backend
+### 3. Projeyi Çalıştırma
+```bash
+cd telehealth
 mvn spring-boot:run
 ```
 
-```
-cd frontend
-npm install
-ng serve
-```
+### 4. API'leri Test Etme
+- **Swagger UI:** http://localhost:8080/swagger-ui/index.html
+- **API Docs:** http://localhost:8080/v3/api-docs
 
 ---
 
-## 🤝 Contributors
+## 📡 API Endpoint'leri
 
-Halid Hacbekkur
-Nedim İsa
-Ömer Doğan
-Zelal Ergin
-Ahmet Akif Yılmaz
-Cena İsmail
+### 🔐 Authentication
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/api/auth/register` | Yeni kullanıcı kaydı |
+| POST | `/api/auth/login` | Giriş (JWT token) |
+
+### 👥 Users
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/api/users` | Tüm kullanıcılar |
+| GET | `/api/users/{id}` | ID ile kullanıcı |
+| GET | `/api/users/me` | Kendi profilim |
+| PUT | `/api/users/{id}` | Güncelle |
+| DELETE | `/api/users/{id}` | Sil |
+
+### 📅 Appointments
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/api/appointments` | Randevu oluştur |
+| GET | `/api/appointments/my` | Hasta randevuları |
+| GET | `/api/appointments/doctor` | Doktor randevuları |
+| PUT | `/api/appointments/{id}/approve` | Onayla (DOCTOR) |
+| PUT | `/api/appointments/{id}/cancel` | İptal et |
+| PUT | `/api/appointments/{id}/complete` | Tamamla (DOCTOR) |
+
+### 🏥 Medical Records
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/api/medical-records/my` | Kendi kaydım (PATIENT) |
+| POST | `/api/medical-records/my` | Kayıt oluştur/güncelle (PATIENT) |
+| GET | `/api/medical-records/patient/{id}` | Hasta kaydı (DOCTOR) |
+
+### 💊 Prescriptions
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/api/prescriptions` | Reçete yaz (DOCTOR) |
+| GET | `/api/prescriptions/my` | Reçetelerim (PATIENT) |
 
 ---
 
-## 📜 License
+## 🔐 Kimlik Doğrulama
 
-Educational Project
+Sistem JWT (JSON Web Token) tabanlı kimlik doğrulama kullanır.
+
+```
+Authorization: Bearer <jwt_token>
+```
+
+**Roller:** `PATIENT`, `DOCTOR`, `ADMIN`
+
+---
+
+## 🔄 Randevu Durum Akışı
+
+```
+PENDING → APPROVED → COMPLETED
+   ↓         ↓
+CANCELLED  CANCELLED
+```
+
+- Sadece **PENDING** → APPROVED (doktor onaylar)
+- Sadece **APPROVED** → COMPLETED (görüşme sonrası)
+- **PENDING** veya **APPROVED** → CANCELLED (iptal)
+- Tamamlanmış randevu iptal edilemez
+
+---
+
+## 👥 Ekip
+
+| İsim | Rol |
+|------|-----|
+| Halid Hacbekkur | Scrum Master |
+| Cena İsmail | Frontend Geliştirme |
+| Zelal Ergin | Backend Geliştirme |
+| Nedim İsa | Gereksinim Analizi |
+| Ahmet Akif Yılmaz | Veritabanı & Güvenlik |
+
+---
+
+## 📄 Lisans
+
+Bu proje eğitim amaçlı geliştirilmiştir.
