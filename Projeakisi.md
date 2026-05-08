@@ -195,7 +195,7 @@ Bu doküman, **HealthTech (Tele-Sağlık Platformu)** projesinin 6 haftalık ile
 |--------|----------|-----------------|
 | Kullanıcı Kayıt Formu | Ad, e-posta, şifre, telefon, rol | POST /api/auth/register |
 | Randevu Formu | Doktor ID, tarih/saat | POST /api/appointments |
-| Tıbbi Kayıt | Teşhis, tedavi, notlar | POST /api/medical-records |
+| Tıbbi Kayıt | Teşhis, tedavi, notlar | POST /api/medical-records/my |
 | Reçete | İlaç adı, doz, süre | POST /api/prescriptions |
 | Sistem Logları | Giriş/çıkış, hata kayıtları | Spring Boot Logger |
 
@@ -429,7 +429,7 @@ Tüm backend API endpoint'leri Swagger/OpenAPI ile dokümante edildi. Frontend-b
 | PUT | /api/appointments/{id}/complete | Randevu tamamla | JWT (DOCTOR) |
 | POST | /api/prescriptions | Reçete yaz | JWT (DOCTOR) |
 | GET | /api/prescriptions/my | Reçetelerim | JWT (PATIENT) |
-| POST | /api/medical-records | Tıbbi kayıt oluştur | JWT gerekli |
+| POST | /api/medical-records/my | Tıbbi kayıt oluştur | JWT gerekli |
 | GET | /api/medical-records/my | Tıbbi kaydım | JWT gerekli |
 | GET | /api/medical-records/patient/{id} | Hasta tıbbi kaydı | JWT (DOCTOR) |
 
@@ -784,3 +784,67 @@ Proje genelinde elde edilen sonuçlar ve istatistikler değerlendirildi.
 * **BUG-009:** Duplicate email 500 veriyordu → EmailAlreadyExistsException ile 409
 * **BUG-010:** createdAt null kalıyordu → @PrePersist ile otomatik atama
 
+---
+
+# 🚀 İLERİ DÜZEY GELİŞTİRME HARİTASI (SUPER APP)
+**Devlet Hastanesi / Ücretsiz Sağlık Sistemi Modeli**
+
+Ödeme ve fatura adımları projeden çıkarılmış, tamamen ücretsiz ve devlete ait bir MHRS / e-Nabız modeli benimsenmiştir.
+
+#### 🔵 FAZ 2: Gelişmiş Profil & Akıllı Randevu Sistemi
+*Durum: ⏳ Başlamak Üzere*
+
+| Görev Kodu | Modül Adı | İçerik | Öncelik |
+|:---:|---|---|:---:|
+| **F2-01** | Gelişmiş Hasta Profili | TC Kimlik, Acil durum kişisi, SGK, Kan grubu, Engellilik durumu eklenmesi | Yüksek |
+| **F2-02** | Doktor Profil Yönetimi | Uzmanlık alanı, çalıştığı hastane/poliklinik, diller, özgeçmiş | Yüksek |
+| **F2-03** | Akıllı Randevu Sistemi | Poliklinik/Bölüm seçimi, doktor filtreleme, kapasite ve çakışma kontrolü | Yüksek |
+| **F2-04** | Bekleme Odası & İptaller | İptal edilen randevunun yerine bekleme listesindeki hastayı alma | Orta |
+
+---
+
+#### 🟠 FAZ 3: Bildirim ve İletişim Altyapısı
+*Durum: ⏳ Bekliyor*
+
+| Görev Kodu | Modül Adı | İçerik | Öncelik |
+|:---:|---|---|:---:|
+| **F3-01** | SMS ve Email Hatırlatıcılar | Randevuya 24 saat kala otomatik hatırlatma mesajı gönderme | Yüksek |
+| **F3-02** | Canlı Mesajlaşma (Chat) | Hasta-Doktor arası mesajlaşma, tahlil/dosya/görsel gönderme | Yüksek |
+| **F3-03** | Gelişmiş Video Konferans | Jitsi bağlantısına süre takibi ve ekran paylaşımı ekleme | Yüksek |
+| **F3-04** | Tahlil Sonuç Bildirimi | Hastanın laboratuvar sonucu çıktığında anlık bildirim gönderme | Orta |
+
+---
+
+#### 🟣 FAZ 4: İleri Düzey Tıbbi İşlemler (e-Nabız benzeri)
+*Durum: ⏳ Bekliyor*
+
+| Görev Kodu | Modül Adı | İçerik | Öncelik |
+|:---:|---|---|:---:|
+| **F4-01** | Tahlil ve Laboratuvar | Röntgen, MR ve kan tahlili sonuçlarını (PDF/DICOM) sisteme yükleme | Yüksek |
+| **F4-02** | E-Reçete Yönetimi | ICD-10 kodları ile teşhis girme, eczane entegrasyonuna hazır yapı | Yüksek |
+| **F4-03** | İlaç Kullanım Hatırlatıcısı | Kronik hastalar için periyodik ilaç yenileme ve içme hatırlatması | Orta |
+| **F4-04** | Doktorlar Arası Sevk | Hastanın tıbbi kayıtlarının başka bir uzman doktora yönlendirilmesi | Orta |
+
+---
+
+#### 🔴 FAZ 5: İleri Güvenlik, Acil Durum & Web Arayüzü
+*Durum: ⏳ Bekliyor*
+
+| Görev Kodu | Modül Adı | İçerik | Öncelik |
+|:---:|---|---|:---:|
+| **F5-01** | Acil Durum Modülü (112) | Tek tuşla 112 yönlendirme, acil kişiye SMS, anlık konum (GPS) paylaşımı | Yüksek |
+| **F5-02** | 2FA ve Hesap Güvenliği | İki faktörlü doğrulama, şüpheli giriş uyarısı, erişim logları (kim baktı) | Yüksek |
+| **F5-03** | Angular Frontend (Web) | Karanlık/Aydınlık tema, Responsive, e-Devlet girişine benzer modern UI | Yüksek |
+| **F5-04** | Gelişmiş Raporlama (Admin) | Poliklinik doluluk oranları, iptal oranları, büyüme istatistikleri | Orta |
+
+---
+
+#### 🟡 FAZ 6: Mobil Uygulama (Flutter / React Native)
+*Durum: ⏳ Bekliyor*
+
+| Görev Kodu | Modül Adı | İçerik | Öncelik |
+|:---:|---|---|:---:|
+| **F6-01** | Mobil Uygulama Çatısı | Hasta ve Doktor için native mobil uygulama arayüzü | Yüksek |
+| **F6-02** | Biyometrik Giriş | Face ID (Yüz Tanıma) ve Parmak izi ile giriş entegrasyonu | Yüksek |
+| **F6-03** | Anlık Push Notifications | Mobil cihazlara direkt randevu ve tahlil bildirimleri (FCM/APNS) | Yüksek |
+| **F6-04** | Offline Mod | İnternet yokken sınırlı bilgilere (örneğin reçete barkodu) erişebilme | Orta |
