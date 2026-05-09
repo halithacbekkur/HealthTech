@@ -33,5 +33,9 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
+    // Randevu notu / ziyaret sebebi
+    @Column(length = 500)
+    private String notes;
+
     private LocalDateTime createdAt;
 }

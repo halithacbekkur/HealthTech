@@ -27,85 +27,66 @@ public class AppointmentController {
         this.jwtService = jwtService;
     }
 
-    @Operation(summary = "Yeni randevu oluştur", description = "Giriş yapan hasta, belirtilen doktora randevu oluşturur")
+    @Operation(summary = "Yeni randevu oluştur")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Randevu başarıyla oluşturuldu"),
-            @ApiResponse(responseCode = "400", description = "Geçersiz randevu bilgisi"),
+            @ApiResponse(responseCode = "200", description = "Randevu oluşturuldu"),
+            @ApiResponse(responseCode = "400", description = "Geçersiz bilgi"),
             @ApiResponse(responseCode = "404", description = "Doktor bulunamadı")
     })
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> createAppointment(
             @RequestBody AppointmentRequestDTO requestDTO,
             HttpServletRequest request) {
-
-        // JWT token'dan giriş yapan kullanıcının email'ini çıkar
-        String email = extractEmailFromToken(request);
-
-        AppointmentResponseDTO response = appointmentService.createAppointment(email, requestDTO);
-        return ResponseEntity.ok(response);
+        String email = extractEmail(request);
+        return ResponseEntity.ok(appointmentService.createAppointment(email, requestDTO));
     }
 
-    @Operation(summary = "Hastanın randevularını listele", description = "Belirtilen hasta ID'sine ait tüm randevuları getirir")
-    @ApiResponse(responseCode = "200", description = "Randevu listesi başarıyla döndü")
+    @Operation(summary = "Kendi randevularımı getir (hasta — JWT'den güvenli)")
     @GetMapping("/my")
-    public ResponseEntity<List<AppointmentResponseDTO>> getMyAppointments(
-            @RequestParam Long patientId) {
-
-        List<AppointmentResponseDTO> appointments = appointmentService.getPatientAppointments(patientId);
-        return ResponseEntity.ok(appointments);
+    public ResponseEntity<List<AppointmentResponseDTO>> getMyAppointments(HttpServletRequest request) {
+        String email = extractEmail(request);
+        return ResponseEntity.ok(appointmentService.getPatientAppointmentsByEmail(email));
     }
 
-    @Operation(summary = "Doktorun randevularını listele", description = "Belirtilen doktor ID'sine ait tüm randevuları getirir")
-    @ApiResponse(responseCode = "200", description = "Doktor randevu listesi başarıyla döndü")
-    @GetMapping("/doctor")
-    public ResponseEntity<List<AppointmentResponseDTO>> getDoctorAppointments(
-            @RequestParam Long doctorId) {
-
-        List<AppointmentResponseDTO> appointments = appointmentService.getDoctorAppointments(doctorId);
-        return ResponseEntity.ok(appointments);
+    @Operation(summary = "Doktorun kendi randevuları (JWT'den güvenli)")
+    @GetMapping("/doctor/my")
+    public ResponseEntity<List<AppointmentResponseDTO>> getMyDoctorAppointments(HttpServletRequest request) {
+        String email = extractEmail(request);
+        return ResponseEntity.ok(appointmentService.getDoctorAppointmentsByEmail(email));
     }
 
-    @Operation(summary = "Randevu iptal et", description = "Belirtilen ID'ye sahip randevuyu iptal eder (durum: CANCELLED)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Randevu başarıyla iptal edildi"),
-            @ApiResponse(responseCode = "404", description = "Randevu bulunamadı")
-    })
+    @Operation(summary = "ID ile hasta randevuları (admin)")
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<AppointmentResponseDTO>> getPatientAppointments(@PathVariable Long patientId) {
+        return ResponseEntity.ok(appointmentService.getPatientAppointments(patientId));
+    }
+
+    @Operation(summary = "ID ile doktor randevuları (admin)")
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<AppointmentResponseDTO>> getDoctorAppointments(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(appointmentService.getDoctorAppointments(doctorId));
+    }
+
+    @Operation(summary = "Randevu iptal et")
     @PutMapping("/{id}/cancel")
     public ResponseEntity<AppointmentResponseDTO> cancelAppointment(@PathVariable Long id) {
-
-        AppointmentResponseDTO response = appointmentService.cancelAppointment(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(appointmentService.cancelAppointment(id));
     }
 
-    @Operation(summary = "Randevu onayla (Doktor)", description = "Doktor, bekleyen randevuyu onaylar (durum: APPROVED)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Randevu başarıyla onaylandı"),
-            @ApiResponse(responseCode = "404", description = "Randevu bulunamadı")
-    })
+    @Operation(summary = "Randevu onayla (Doktor)")
     @PutMapping("/{id}/approve")
     public ResponseEntity<AppointmentResponseDTO> approveAppointment(@PathVariable Long id) {
-
-        AppointmentResponseDTO response = appointmentService.approveAppointment(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(appointmentService.approveAppointment(id));
     }
 
-    @Operation(summary = "Randevu tamamla (Doktor)", description = "Doktor, görüşme sonrası randevuyu tamamlar (durum: COMPLETED)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Randevu başarıyla tamamlandı"),
-            @ApiResponse(responseCode = "400", description = "Geçersiz durum geçişi"),
-            @ApiResponse(responseCode = "404", description = "Randevu bulunamadı")
-    })
+    @Operation(summary = "Randevu tamamla (Doktor)")
     @PutMapping("/{id}/complete")
     public ResponseEntity<AppointmentResponseDTO> completeAppointment(@PathVariable Long id) {
-
-        AppointmentResponseDTO response = appointmentService.completeAppointment(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(appointmentService.completeAppointment(id));
     }
 
-    // JWT token'dan email çıkaran yardımcı metod
-    private String extractEmailFromToken(HttpServletRequest request) {
+    private String extractEmail(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        String token = authHeader.substring(7); // "Bearer " kısmını atla (7 karakter)
-        return jwtService.extractEmail(token);
+        return jwtService.extractEmail(authHeader.substring(7));
     }
 }

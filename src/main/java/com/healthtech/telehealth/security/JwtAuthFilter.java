@@ -31,10 +31,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Auth ve Swagger endpoint'leri token gerektirmez
+        // Auth, Swagger ve Frontend static dosyalari token gerektirmez
         if (path.startsWith("/api/auth") ||
             path.startsWith("/swagger-ui") ||
-            path.startsWith("/v3/api-docs")) {
+            path.startsWith("/v3/api-docs") ||
+            path.equals("/") ||
+            path.equals("/index.html") ||
+            path.startsWith("/css/") ||
+            path.startsWith("/js/") ||
+            path.startsWith("/assets/") ||
+            path.equals("/favicon.ico")) {
             filterChain.doFilter(request, response);
             return;
         }

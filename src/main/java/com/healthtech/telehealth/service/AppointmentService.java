@@ -31,58 +31,68 @@ public class AppointmentService {
     // 1. Yeni Randevu Oluşturma
     public AppointmentResponseDTO createAppointment(String patientEmail, AppointmentRequestDTO requestDTO) {
 
-        // Hastayı bul
         User patient = userRepository.findByEmail(patientEmail)
                 .orElseThrow(() -> new UserNotFoundException("Hasta bulunamadı: " + patientEmail));
 
-        // Doktoru bul
         User doctor = userRepository.findById(requestDTO.getDoctorId())
                 .orElseThrow(() -> new UserNotFoundException("Doktor bulunamadı: ID " + requestDTO.getDoctorId()));
 
-        // Doktor rolü kontrolü — sadece DOCTOR rolündeki kullanıcıya randevu alınabilir
         if (doctor.getRole() != Role.DOCTOR) {
             throw new InvalidStatusTransitionException("Seçilen kullanıcı doktor değil: " + doctor.getFullName());
         }
 
-        // Geçmiş tarih kontrolü — geçmiş bir tarihe randevu alınamaz
+        if (requestDTO.getAppointmentDate() == null) {
+            throw new InvalidStatusTransitionException("Randevu tarihi boş olamaz");
+        }
+
         if (requestDTO.getAppointmentDate().isBefore(LocalDateTime.now())) {
             throw new InvalidStatusTransitionException("Geçmiş bir tarihe randevu oluşturulamaz");
         }
 
-        // Randevu oluştur
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setAppointmentDate(requestDTO.getAppointmentDate());
         appointment.setStatus(AppointmentStatus.PENDING);
+        appointment.setNotes(requestDTO.getNotes());
         appointment.setCreatedAt(LocalDateTime.now());
 
-        Appointment savedAppointment = appointmentRepository.save(appointment);
-        return mapToResponseDTO(savedAppointment);
+        Appointment saved = appointmentRepository.save(appointment);
+        return mapToResponseDTO(saved);
     }
 
-    // 2. Bir Hastanın Randevularını Getirme
+    // 2. Hastanın kendi randevuları (email üzerinden — güvenli)
+    public List<AppointmentResponseDTO> getPatientAppointmentsByEmail(String email) {
+        User patient = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Hasta bulunamadı: " + email));
+        return appointmentRepository.findByPatientId(patient.getId())
+                .stream().map(this::mapToResponseDTO).collect(Collectors.toList());
+    }
+
+    // 3. Doktorun randevuları (email üzerinden — güvenli)
+    public List<AppointmentResponseDTO> getDoctorAppointmentsByEmail(String email) {
+        User doctor = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Doktor bulunamadı: " + email));
+        return appointmentRepository.findByDoctorId(doctor.getId())
+                .stream().map(this::mapToResponseDTO).collect(Collectors.toList());
+    }
+
+    // 4. ID ile randevu getir
     public List<AppointmentResponseDTO> getPatientAppointments(Long patientId) {
-        List<Appointment> appointments = appointmentRepository.findByPatientId(patientId);
-        return appointments.stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+        return appointmentRepository.findByPatientId(patientId)
+                .stream().map(this::mapToResponseDTO).collect(Collectors.toList());
     }
 
-    // 3. Bir Doktorun Randevularını Getirme
     public List<AppointmentResponseDTO> getDoctorAppointments(Long doctorId) {
-        List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId);
-        return appointments.stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+        return appointmentRepository.findByDoctorId(doctorId)
+                .stream().map(this::mapToResponseDTO).collect(Collectors.toList());
     }
 
-    // 4. Randevu İptal Etme — sadece PENDING veya APPROVED durumdaki randevular iptal edilebilir
+    // 5. Randevu İptal
     public AppointmentResponseDTO cancelAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("Randevu bulunamadı: ID " + appointmentId));
 
-        // Durum geçiş kontrolü: Sadece PENDING veya APPROVED iken iptal edilebilir
         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
             throw new InvalidStatusTransitionException("Tamamlanmış randevu iptal edilemez");
         }
@@ -91,52 +101,49 @@ public class AppointmentService {
         }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        Appointment updated = appointmentRepository.save(appointment);
-        return mapToResponseDTO(updated);
+        return mapToResponseDTO(appointmentRepository.save(appointment));
     }
 
-    // 5. Doktor Randevu Onaylama — sadece PENDING durumdaki randevular onaylanabilir
+    // 6. Doktor Randevu Onaylama
     public AppointmentResponseDTO approveAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("Randevu bulunamadı: ID " + appointmentId));
 
-        // Durum geçiş kontrolü: Sadece PENDING iken onaylanabilir
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
             throw new InvalidStatusTransitionException(
-                    "Sadece bekleyen (PENDING) randevular onaylanabilir. Mevcut durum: " + appointment.getStatus()
-            );
+                    "Sadece bekleyen randevular onaylanabilir. Mevcut durum: " + appointment.getStatus());
         }
 
         appointment.setStatus(AppointmentStatus.APPROVED);
-        Appointment updated = appointmentRepository.save(appointment);
-        return mapToResponseDTO(updated);
+        return mapToResponseDTO(appointmentRepository.save(appointment));
     }
 
-    // 6. Randevu Tamamlama — sadece APPROVED durumdaki randevular tamamlanabilir
+    // 7. Randevu Tamamlama
     public AppointmentResponseDTO completeAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("Randevu bulunamadı: ID " + appointmentId));
 
-        // Durum geçiş kontrolü: Sadece APPROVED iken tamamlanabilir
         if (appointment.getStatus() != AppointmentStatus.APPROVED) {
             throw new InvalidStatusTransitionException(
-                    "Sadece onaylanmış (APPROVED) randevular tamamlanabilir. Mevcut durum: " + appointment.getStatus()
-            );
+                    "Sadece onaylanmış randevular tamamlanabilir. Mevcut durum: " + appointment.getStatus());
         }
 
         appointment.setStatus(AppointmentStatus.COMPLETED);
-        Appointment updated = appointmentRepository.save(appointment);
-        return mapToResponseDTO(updated);
+        return mapToResponseDTO(appointmentRepository.save(appointment));
     }
 
-    // Yardımcı: Entity → DTO dönüşümü
-    private AppointmentResponseDTO mapToResponseDTO(Appointment appointment) {
+    // Yardımcı: Entity → DTO
+    private AppointmentResponseDTO mapToResponseDTO(Appointment a) {
         return new AppointmentResponseDTO(
-                appointment.getId(),
-                appointment.getPatient().getFullName(),
-                appointment.getDoctor().getFullName(),
-                appointment.getAppointmentDate(),
-                appointment.getStatus()
+                a.getId(),
+                a.getPatient().getId(),
+                a.getPatient().getFullName(),
+                a.getDoctor().getId(),
+                a.getDoctor().getFullName(),
+                a.getAppointmentDate(),
+                a.getStatus(),
+                a.getNotes(),
+                a.getCreatedAt()
         );
     }
 }

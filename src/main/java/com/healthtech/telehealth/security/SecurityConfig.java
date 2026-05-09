@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Giris ve kayit herkese acik
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger herkese acik
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/assets/**", "/favicon.ico").permitAll() // Frontend static dosyalari herkese acik
                         .requestMatchers(HttpMethod.PUT, "/api/appointments/*/approve").hasRole("DOCTOR") // Sadece doktor onaylayabilir
                         .anyRequest().authenticated() // Diger tum istekler icin giris yapmis olmak gerekli
                 )

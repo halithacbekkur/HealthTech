@@ -87,7 +87,7 @@ http://localhost:8080/swagger-ui.html
 ### Medical Records (Tıbbi Kayıt)
 | Metod | Endpoint | Açıklama |
 |-------|----------|----------|
-| POST | /api/medical-records | Tıbbi kayıt oluştur |
+| POST | /api/medical-records/my | Tıbbi kayıt oluştur |
 | GET | /api/medical-records/my | Tıbbi kaydım |
 | GET | /api/medical-records/patient/{id} | Hasta tıbbi kaydı (DOCTOR) |
 
