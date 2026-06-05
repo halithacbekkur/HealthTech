@@ -24,13 +24,7 @@ public class UserService {
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFullName(),
-                        user.getEmail(),
-                        user.getPhone(),
-                        user.getRole()
-                ))
+                .map(this::mapToDTO)
                 .toList();
     }
 
@@ -43,26 +37,13 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());
 
         User savedUser = userRepository.save(user);
-
-        return new UserResponseDTO(
-                savedUser.getId(),
-                savedUser.getFullName(),
-                savedUser.getEmail(),
-                savedUser.getPhone(),
-                savedUser.getRole()
-        );
+        return mapToDTO(savedUser);
     }
 
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: ID " + id));
-        return new UserResponseDTO(
-                user.getId(),
-                user.getFullName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getRole()
-        );
+        return mapToDTO(user);
     }
 
     public void deleteUser(Long id) {
@@ -93,14 +74,7 @@ public class UserService {
         // Simdilik mevcut rol her zaman korunuyor
 
         User updatedUser = userRepository.save(user);
-
-        return new UserResponseDTO(
-                updatedUser.getId(),
-                updatedUser.getFullName(),
-                updatedUser.getEmail(),
-                updatedUser.getPhone(),
-                updatedUser.getRole()
-        );
+        return mapToDTO(updatedUser);
     }
 
     public UserResponseDTO getCurrentUser(String email) {
@@ -108,26 +82,14 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + email));
 
-        return new UserResponseDTO(
-                user.getId(),
-                user.getFullName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getRole()
-        );
+        return mapToDTO(user);
     }
 
     // G17: Doktor listeleme (hasta randevu alirken doktor secimi icin)
     public List<UserResponseDTO> getDoctors() {
         return userRepository.findByRole(com.healthtech.telehealth.entity.Role.DOCTOR)
                 .stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFullName(),
-                        user.getEmail(),
-                        user.getPhone(),
-                        user.getRole()
-                ))
+                .map(this::mapToDTO)
                 .toList();
     }
 
@@ -135,13 +97,30 @@ public class UserService {
     public List<UserResponseDTO> getUsersByRole(com.healthtech.telehealth.entity.Role role) {
         return userRepository.findByRole(role)
                 .stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFullName(),
-                        user.getEmail(),
-                        user.getPhone(),
-                        user.getRole()
-                ))
+                .map(this::mapToDTO)
                 .toList();
+    }
+
+    // Yardımcı: User → DTO (genişletilmiş alanlar)
+    private UserResponseDTO mapToDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setFullName(user.getFullName());
+        dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
+        dto.setRole(user.getRole());
+        dto.setTcKimlik(user.getTcKimlik());
+        dto.setBirthDate(user.getBirthDate());
+        dto.setGender(user.getGender());
+        dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
+        dto.setAccountStatus(user.getAccountStatus());
+        dto.setEmailVerified(user.isEmailVerified());
+        dto.setPhoneVerified(user.isPhoneVerified());
+        dto.setBloodGroup(user.getBloodGroup());
+        dto.setChronicDiseases(user.getChronicDiseases());
+        dto.setDisabilities(user.getDisabilities());
+        dto.setLastLoginAt(user.getLastLoginAt());
+        dto.setCreatedAt(user.getCreatedAt());
+        return dto;
     }
 }

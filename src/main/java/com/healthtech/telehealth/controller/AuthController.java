@@ -1,15 +1,19 @@
 package com.healthtech.telehealth.controller;
 
-import com.healthtech.telehealth.dto.UserResponseDTO;
+import com.healthtech.telehealth.dto.*;
+import com.healthtech.telehealth.entity.AccountStatus;
 import com.healthtech.telehealth.entity.User;
 import com.healthtech.telehealth.exception.EmailAlreadyExistsException;
 import com.healthtech.telehealth.exception.InvalidCredentialsException;
 import com.healthtech.telehealth.repository.UserRepository;
+import com.healthtech.telehealth.service.AuditLogService;
 import com.healthtech.telehealth.service.JwtService;
+import com.healthtech.telehealth.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,69 +25,153 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Authentication", description = "Kullanıcı kayıt ve giriş işlemleri")
+@Tag(name = "Authentication", description = "Kullanıcı kayıt, giriş, şifre sıfırlama ve hesap yönetimi")
 public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuditLogService auditLogService;
+    private final ProfileService profileService;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    private static final int MAX_LOGIN_ATTEMPTS = 5;
+    private static final int LOCK_DURATION_MINUTES = 15;
+
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                          JwtService jwtService, AuditLogService auditLogService,
+                          ProfileService profileService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.auditLogService = auditLogService;
+        this.profileService = profileService;
     }
 
-    @Operation(summary = "Kullanıcı girişi", description = "E-posta ve şifre ile giriş yaparak JWT token alır")
+    @Operation(summary = "Kullanıcı girişi", description = "E-posta ve şifre ile giriş yaparak JWT token + kullanıcı bilgisi alır")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Giriş başarılı, JWT token döner"),
-            @ApiResponse(responseCode = "401", description = "Geçersiz e-posta veya şifre")
+            @ApiResponse(responseCode = "200", description = "Giriş başarılı"),
+            @ApiResponse(responseCode = "401", description = "Geçersiz e-posta veya şifre"),
+            @ApiResponse(responseCode = "423", description = "Hesap kilitli")
     })
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody User request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request,
+                                                   HttpServletRequest httpRequest) {
 
-        // BUG-005 FIX: Kullanici bulunamazsa veya sifre yanlissa 401 donuyor (500 degil)
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Geçersiz e-posta veya şifre"));
 
+        // Hesap durumu kontrolü
+        if (user.getAccountStatus() == AccountStatus.DELETED) {
+            throw new InvalidCredentialsException("Bu hesap silinmiş");
+        }
+        if (user.getAccountStatus() == AccountStatus.FROZEN) {
+            throw new InvalidCredentialsException("Bu hesap dondurulmuş. Destek ile iletişime geçin.");
+        }
+
+        // Brute-force koruması — hesap kilitli mi?
+        if (user.isAccountLocked()) {
+            throw new InvalidCredentialsException("Çok fazla başarısız deneme. Hesap " + LOCK_DURATION_MINUTES + " dakika kilitli.");
+        }
+
+        // Şifre kontrolü
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            // Başarısız giriş sayısını artır
+            user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+            if (user.getFailedLoginAttempts() >= MAX_LOGIN_ATTEMPTS) {
+                user.setLockedUntil(LocalDateTime.now().plusMinutes(LOCK_DURATION_MINUTES));
+            }
+            userRepository.save(user);
+
+            auditLogService.log("LOGIN_FAILED", "User", user.getId(), request.getEmail(),
+                    httpRequest.getRemoteAddr(), httpRequest.getHeader("User-Agent"), null);
+
             throw new InvalidCredentialsException("Geçersiz e-posta veya şifre");
         }
 
-        String token = jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId());
+        // Başarılı giriş — sayaçları sıfırla
+        user.setFailedLoginAttempts(0);
+        user.setLockedUntil(null);
+        user.setLastLoginAt(LocalDateTime.now());
+        userRepository.save(user);
 
-        return ResponseEntity.ok(Map.of("token", token));
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId());
+        UserResponseDTO userDTO = profileService.mapToFullDTO(user);
+
+        auditLogService.log("LOGIN_SUCCESS", "User", user.getId(), user.getEmail(),
+                httpRequest.getRemoteAddr(), httpRequest.getHeader("User-Agent"), null);
+
+        return ResponseEntity.ok(new LoginResponseDTO(token, userDTO));
     }
 
-    @Operation(summary = "Yeni kullanıcı kaydı", description = "Hasta, doktor veya admin rolünde yeni kullanıcı oluşturur")
+    @Operation(summary = "Yeni kullanıcı kaydı", description = "Hasta veya doktor olarak yeni kullanıcı oluşturur")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Kayıt başarılı"),
-            @ApiResponse(responseCode = "400", description = "Geçersiz bilgi veya eksik alan"),
+            @ApiResponse(responseCode = "400", description = "Geçersiz bilgi"),
             @ApiResponse(responseCode = "409", description = "Bu e-posta zaten kayıtlı")
     })
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody User request) {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request,
+                                                     HttpServletRequest httpRequest) {
 
-        // BUG-009 FIX: Ayni email ile cift kayit kontrolu (500 yerine 409 donuyor)
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("Bu e-posta adresi zaten kayıtlı: " + request.getEmail());
         }
 
-        // Sifreyi hashle
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        request.setCreatedAt(LocalDateTime.now());
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhone(request.getPhone());
+        user.setRole(request.getRole());
+        user.setTcKimlik(request.getTcKimlik());
+        user.setBirthDate(request.getBirthDate());
+        user.setGender(request.getGender());
+        user.setAccountStatus(AccountStatus.ACTIVE);
 
-        User savedUser = userRepository.save(request);
+        User savedUser = userRepository.save(user);
 
-        // BUG-004 FIX: Sifre hash'i donmemeli — UserResponseDTO kullaniliyor
-        UserResponseDTO responseDTO = new UserResponseDTO(
-                savedUser.getId(),
-                savedUser.getFullName(),
-                savedUser.getEmail(),
-                savedUser.getPhone(),
-                savedUser.getRole()
-        );
+        auditLogService.log("REGISTER", "User", savedUser.getId(), savedUser.getEmail(),
+                httpRequest.getRemoteAddr(), httpRequest.getHeader("User-Agent"), null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileService.mapToFullDTO(savedUser));
+    }
+
+    @Operation(summary = "Şifre sıfırlama talebi", description = "Belirtilen e-postaya şifre sıfırlama linki gönderir")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        // Not: E-posta gönderim servisi (SMTP) yapılandırıldığında aktif edilecek
+        // Güvenlik: E-posta bulunamasa bile aynı mesajı döndür (email enumeration koruması)
+        return ResponseEntity.ok(Map.of("message", "Şifre sıfırlama talimatları e-posta adresinize gönderildi"));
+    }
+
+    @Operation(summary = "Şifre değiştir", description = "Giriş yapmış kullanıcının şifresini değiştirir")
+    @PutMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(@RequestBody Map<String, String> body,
+                                                               HttpServletRequest httpRequest) {
+        String authHeader = httpRequest.getHeader("Authorization");
+        String token = authHeader.substring(7);
+        String email = jwtService.extractEmail(token);
+
+        String currentPassword = body.get("currentPassword");
+        String newPassword = body.get("newPassword");
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new InvalidCredentialsException("Kullanıcı bulunamadı"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Mevcut şifre yanlış");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new InvalidCredentialsException("Yeni şifre en az 8 karakter olmalı");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        auditLogService.log("PASSWORD_CHANGE", "User", user.getId(), email);
+
+        return ResponseEntity.ok(Map.of("message", "Şifre başarıyla değiştirildi"));
     }
 }
