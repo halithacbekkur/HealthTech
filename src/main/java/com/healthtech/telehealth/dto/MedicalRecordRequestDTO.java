@@ -9,4 +9,12 @@ public class MedicalRecordRequestDTO {
     private String pastDiseases;
     private Double height;
     private Double weight;
+    // Faz 4: Genişletilmiş alanlar
+    private String chronicDiseases;
+    private String surgeryHistory;
+    private String familyHistory;
+    private String currentMedications;
+    private String disabilities;
+    private Boolean smoker;
+    private Boolean alcoholUse;
 }
