@@ -15,10 +15,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.healthtech.telehealth.repository.DoctorProfileRepository doctorProfileRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       com.healthtech.telehealth.repository.DoctorProfileRepository doctorProfileRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.doctorProfileRepository = doctorProfileRepository;
     }
 
     public List<UserResponseDTO> getAllUsers() {
@@ -85,11 +88,11 @@ public class UserService {
         return mapToDTO(user);
     }
 
-    // G17: Doktor listeleme (hasta randevu alirken doktor secimi icin)
+    // G17: Doktor listeleme (hasta randevu alirken sadece onayli doktorlar secilebilsin)
     public List<UserResponseDTO> getDoctors() {
-        return userRepository.findByRole(com.healthtech.telehealth.entity.Role.DOCTOR)
+        return doctorProfileRepository.findByApprovalStatus(com.healthtech.telehealth.entity.DoctorApprovalStatus.APPROVED)
                 .stream()
-                .map(this::mapToDTO)
+                .map(profile -> mapToDTO(profile.getUser()))
                 .toList();
     }
 
