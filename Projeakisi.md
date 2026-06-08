@@ -792,59 +792,59 @@ Proje genelinde elde edilen sonuçlar ve istatistikler değerlendirildi.
 Ödeme ve fatura adımları projeden çıkarılmış, tamamen ücretsiz ve devlete ait bir MHRS / e-Nabız modeli benimsenmiştir.
 
 #### 🔵 FAZ 2: Gelişmiş Profil & Akıllı Randevu Sistemi
-*Durum: ⏳ Başlamak Üzere*
+*Durum: ✅ Büyük Oranda Tamamlandı*
 
-| Görev Kodu | Modül Adı | İçerik | Öncelik |
-|:---:|---|---|:---:|
-| **F2-01** | Gelişmiş Hasta Profili | TC Kimlik, Acil durum kişisi, SGK, Kan grubu, Engellilik durumu eklenmesi | Yüksek |
-| **F2-02** | Doktor Profil Yönetimi | Uzmanlık alanı, çalıştığı hastane/poliklinik, diller, özgeçmiş | Yüksek |
-| **F2-03** | Akıllı Randevu Sistemi | Poliklinik/Bölüm seçimi, doktor filtreleme, kapasite ve çakışma kontrolü | Yüksek |
-| **F2-04** | Bekleme Odası & İptaller | İptal edilen randevunun yerine bekleme listesindeki hastayı alma | Orta |
+| Görev Kodu | Modül Adı | İçerik | Öncelik | Durum |
+|:---:|---|---|:---:|:---:|
+| **F2-01** | Gelişmiş Hasta Profili | TC Kimlik, Acil durum kişisi, SGK, Kan grubu, Engellilik durumu eklenmesi | Yüksek | ✅ Tamamlandı |
+| **F2-02** | Doktor Profil Yönetimi | Uzmanlık alanı, çalıştığı hastane/poliklinik, diller, özgeçmiş | Yüksek | ✅ Tamamlandı |
+| **F2-03** | Akıllı Randevu Sistemi | Poliklinik/Bölüm seçimi, doktor filtreleme, kapasite ve çakışma kontrolü | Yüksek | ✅ Tamamlandı |
+| **F2-04** | Bekleme Odası & İptaller | İptal edilen randevunun yerine bekleme listesindeki hastayı alma | Orta | ⏳ Bekliyor |
 
 ---
 
 #### 🟠 FAZ 3: Bildirim ve İletişim Altyapısı
-*Durum: ⏳ Bekliyor*
+*Durum: 🟠 Kısmen Tamamlandı*
 
-| Görev Kodu | Modül Adı | İçerik | Öncelik |
-|:---:|---|---|:---:|
-| **F3-01** | SMS ve Email Hatırlatıcılar | Randevuya 24 saat kala otomatik hatırlatma mesajı gönderme | Yüksek |
-| **F3-02** | Canlı Mesajlaşma (Chat) | Hasta-Doktor arası mesajlaşma, tahlil/dosya/görsel gönderme | Yüksek |
-| **F3-03** | Gelişmiş Video Konferans | Jitsi bağlantısına süre takibi ve ekran paylaşımı ekleme | Yüksek |
-| **F3-04** | Tahlil Sonuç Bildirimi | Hastanın laboratuvar sonucu çıktığında anlık bildirim gönderme | Orta |
+| Görev Kodu | Modül Adı | İçerik | Öncelik | Durum |
+|:---:|---|---|:---:|:---:|
+| **F3-01** | SMS ve Email Hatırlatıcılar | Randevuya 24 saat kala otomatik hatırlatma mesajı gönderme | Yüksek | ⏳ Bekliyor |
+| **F3-02** | Canlı Mesajlaşma (Chat) | Hasta-Doktor arası mesajlaşma, tahlil/dosya/görsel gönderme | Yüksek | ✅ Tamamlandı |
+| **F3-03** | Gelişmiş Video Konferans | Jitsi bağlantısına süre takibi ve ekran paylaşımı ekleme | Yüksek | ✅ Tamamlandı |
+| **F3-04** | Tahlil Sonuç Bildirimi | Hastanın laboratuvar sonucu çıktığında anlık bildirim gönderme | Orta | ⏳ Bekliyor |
 
 ---
 
 #### 🟣 FAZ 4: İleri Düzey Tıbbi İşlemler (e-Nabız benzeri)
-*Durum: ⏳ Bekliyor*
+*Durum: 🟣 Kısmen Tamamlandı*
 
-| Görev Kodu | Modül Adı | İçerik | Öncelik |
-|:---:|---|---|:---:|
-| **F4-01** | Tahlil ve Laboratuvar | Röntgen, MR ve kan tahlili sonuçlarını (PDF/DICOM) sisteme yükleme | Yüksek |
-| **F4-02** | E-Reçete Yönetimi | ICD-10 kodları ile teşhis girme, eczane entegrasyonuna hazır yapı | Yüksek |
-| **F4-03** | İlaç Kullanım Hatırlatıcısı | Kronik hastalar için periyodik ilaç yenileme ve içme hatırlatması | Orta |
-| **F4-04** | Doktorlar Arası Sevk | Hastanın tıbbi kayıtlarının başka bir uzman doktora yönlendirilmesi | Orta |
+| Görev Kodu | Modül Adı | İçerik | Öncelik | Durum |
+|:---:|---|---|:---:|:---:|
+| **F4-01** | Tahlil ve Laboratuvar | Röntgen, MR ve kan tahlili sonuçlarını (PDF/DICOM) sisteme yükleme | Yüksek | ✅ Tamamlandı |
+| **F4-02** | E-Reçete Yönetimi | ICD-10 kodları ile teşhis girme, eczane entegrasyonuna hazır yapı | Yüksek | ✅ Tamamlandı |
+| **F4-03** | İlaç Kullanım Hatırlatıcısı | Kronik hastalar için periyodik ilaç yenileme ve içme hatırlatması | Orta | ⏳ Bekliyor |
+| **F4-04** | Doktorlar Arası Sevk | Hastanın tıbbi kayıtlarının başka bir uzman doktora yönlendirilmesi | Orta | ⏳ Bekliyor |
 
 ---
 
 #### 🔴 FAZ 5: İleri Güvenlik, Acil Durum & Web Arayüzü
-*Durum: ⏳ Bekliyor*
+*Durum: ✅ Büyük Oranda Tamamlandı*
 
-| Görev Kodu | Modül Adı | İçerik | Öncelik |
-|:---:|---|---|:---:|
-| **F5-01** | Acil Durum Modülü (112) | Tek tuşla 112 yönlendirme, acil kişiye SMS, anlık konum (GPS) paylaşımı | Yüksek |
-| **F5-02** | 2FA ve Hesap Güvenliği | İki faktörlü doğrulama, şüpheli giriş uyarısı, erişim logları (kim baktı) | Yüksek |
-| **F5-03** | Angular Frontend (Web) | Karanlık/Aydınlık tema, Responsive, e-Devlet girişine benzer modern UI | Yüksek |
-| **F5-04** | Gelişmiş Raporlama (Admin) | Poliklinik doluluk oranları, iptal oranları, büyüme istatistikleri | Orta |
+| Görev Kodu | Modül Adı | İçerik | Öncelik | Durum |
+|:---:|---|---|:---:|:---:|
+| **F5-01** | Acil Durum Modülü (112) | Tek tuşla 112 yönlendirme, acil kişiye SMS, anlık konum (GPS) paylaşımı | Yüksek | ✅ Tamamlandı |
+| **F5-02** | 2FA ve Hesap Güvenliği | İki faktörlü doğrulama, şüpheli giriş uyarısı, erişim logları (kim baktı) | Yüksek | ⏳ Bekliyor |
+| **F5-03** | Angular Frontend (Web) | Karanlık/Aydınlık tema, Responsive, e-Devlet girişine benzer modern UI | Yüksek | ✅ Tamamlandı |
+| **F5-04** | Gelişmiş Raporlama (Admin) | Poliklinik doluluk oranları, iptal oranları, büyüme istatistikleri | Orta | ✅ Tamamlandı |
 
 ---
 
 #### 🟡 FAZ 6: Mobil Uygulama (Flutter / React Native)
 *Durum: ⏳ Bekliyor*
 
-| Görev Kodu | Modül Adı | İçerik | Öncelik |
-|:---:|---|---|:---:|
-| **F6-01** | Mobil Uygulama Çatısı | Hasta ve Doktor için native mobil uygulama arayüzü | Yüksek |
-| **F6-02** | Biyometrik Giriş | Face ID (Yüz Tanıma) ve Parmak izi ile giriş entegrasyonu | Yüksek |
-| **F6-03** | Anlık Push Notifications | Mobil cihazlara direkt randevu ve tahlil bildirimleri (FCM/APNS) | Yüksek |
-| **F6-04** | Offline Mod | İnternet yokken sınırlı bilgilere (örneğin reçete barkodu) erişebilme | Orta |
+| Görev Kodu | Modül Adı | İçerik | Öncelik | Durum |
+|:---:|---|---|:---:|:---:|
+| **F6-01** | Mobil Uygulama Çatısı | Hasta ve Doktor için native mobil uygulama arayüzü | Yüksek | ⏳ Bekliyor |
+| **F6-02** | Biyometrik Giriş | Face ID (Yüz Tanıma) ve Parmak izi ile giriş entegrasyonu | Yüksek | ⏳ Bekliyor |
+| **F6-03** | Anlık Push Notifications | Mobil cihazlara direkt randevu ve tahlil bildirimleri (FCM/APNS) | Yüksek | ⏳ Bekliyor |
+| **F6-04** | Offline Mod | İnternet yokken sınırlı bilgilere (örneğin reçete barkodu) erişebilme | Orta | ⏳ Bekliyor |
