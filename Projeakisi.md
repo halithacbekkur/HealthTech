@@ -730,15 +730,15 @@ Proje genelinde elde edilen sonuçlar ve istatistikler değerlendirildi.
 
 | Metrik | Değer |
 |--------|-------|
-| Toplam Java dosyası | 40 |
-| API endpoint sayısı | 19 |
-| Entity sayısı | 4 (User, Appointment, MedicalRecord, Prescription) |
-| DTO sayısı | 7 (Request + Response) |
-| Exception sayısı | 6 özel + GlobalExceptionHandler |
+| Toplam Java dosyası | 121 |
+| API endpoint sayısı | 40+ |
+| Entity sayısı | 29 (User, DoctorProfile, Appointment, Prescription, MedicalRecord, SOS, VideoCall, Message, Notification vb.) |
+| DTO sayısı | 31 (Request, Response, Update DTO'ları) |
+| Exception sayısı | 7 özel + GlobalExceptionHandler |
 | Config dosyası | 3 (Security, Swagger, CORS) |
-| Çözülen bug | 6 |
-| Test senaryosu | 10 |
-| Commit sayısı | 15+ |
+| Çözülen bug | 10+ |
+| Test senaryosu | 20+ |
+| Commit sayısı | 25+ |
 
 **Proje Başarı Kriterleri:**
 
